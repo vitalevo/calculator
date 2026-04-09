@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitalevo — Growth Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #9620FF;
+    --purple-light: rgba(150, 32, 255, 0.08);
+    --purple-mid: rgba(150, 32, 255, 0.15);
+    --cyan: #78E3FD;
+    --bg: #EEF8FF;
+    --white: #FFFFFF;
+    --dark: #0D0D0D;
+    --muted: #6B7280;
+    --border: rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--purple);
+    background: var(--purple-light);
+    padding: 5px 12px;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .headline {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--dark);
+    margin-bottom: 0.75rem;
+  }
+
+  .headline span { color: var(--purple); }
+
+  .sub {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel {
+    background: var(--white);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    padding: 1.75rem;
+  }
+
+  .panel-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .field {
+    margin-bottom: 1.25rem;
+  }
+
+  .field:last-child { margin-bottom: 0; }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .field-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .field-prefix {
+    position: absolute;
+    left: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .field-suffix {
+    position: absolute;
+    right: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    height: 44px;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark);
+    padding: 0 40px 0 32px;
+    outline: none;
+    transition: border-color 0.15s;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  input[type="number"]:focus {
+    border-color: var(--purple);
+    background: var(--white);
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .result-card {
+    background: var(--white);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--purple);
+    opacity: 0.3;
+  }
+
+  .result-card.highlight {
+    background: var(--purple);
+    border-color: var(--purple);
+  }
+
+  .result-card.highlight::before {
+    background: var(--cyan);
+    opacity: 1;
+  }
+
+  .result-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .result-card.highlight .result-label {
+    color: rgba(255,255,255,0.6);
+  }
+
+  .result-value {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--purple);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .result-card.highlight .result-value {
+    color: var(--white);
+  }
+
+  .result-sub {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .result-card.highlight .result-sub {
+    color: rgba(255,255,255,0.6);
+  }
+
+  .roi-row {
+    background: var(--white);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .roi-left { display: flex; flex-direction: column; gap: 4px; }
+
+  .roi-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .roi-value {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--dark);
+  }
+
+  .roi-value span { color: var(--purple); }
+
+  .roi-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .fee-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .fee-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.02em;
+  }
+
+  .multiplier {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--purple);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+
+  .note {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+
+  .divider {
+    width: 100%;
+    height: 0.5px;
+    background: var(--border);
+    margin: 1.5rem 0;
+  }
+
+  .breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .breakdown-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .breakdown-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+  }
+
+  .breakdown-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--purple);
+    opacity: 0.5;
+  }
+
+  .breakdown-value {
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr; }
+    .headline { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="tag">Live on call</div>
+    <h1 class="headline">Let the math<br><span>close the call.</span></h1>
+    <p class="sub">Enter their real numbers. See exactly what they're leaving on the table — per pillar, per month.</p>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-title">Ad performance</div>
+
+      <div class="field">
+        <label>Monthly Revenue</label>
+        <div class="field-wrap">
+          <span class="field-prefix">$</span>
+          <input type="number" id="revenue" value="30000" min="0" oninput="calculate()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Monthly Ad Spend</label>
+        <div class="field-wrap">
+          <span class="field-prefix">$</span>
+          <input type="number" id="adspend" value="3000" min="0" oninput="calculate()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Current ROAS</label>
+        <div class="field-wrap">
+          <input type="number" id="roas" value="3.5" step="0.1" min="0" style="padding-left:12px" oninput="calculate()">
+          <span class="field-suffix">x</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Monthly Orders</label>
+        <div class="field-wrap">
+          <input type="number" id="orders" value="400" min="0" style="padding-left:12px" oninput="calculate()">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Retention metrics</div>
+
+      <div class="field">
+        <label>Active Subscribers</label>
+        <div class="field-wrap">
+          <input type="number" id="subscribers" value="150" min="0" style="padding-left:12px" oninput="calculate()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Monthly Churn Rate</label>
+        <div class="field-wrap">
+          <input type="number" id="churn" value="12" min="0" max="100" style="padding-left:12px" oninput="calculate()">
+          <span class="field-suffix">%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Avg Order Value</label>
+        <div class="field-wrap">
+          <span class="field-prefix">$</span>
+          <input type="number" id="aov" value="55" min="0" oninput="calculate()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Current Conversion Rate</label>
+        <div class="field-wrap">
+          <input type="number" id="cvr" value="2.1" step="0.1" min="0" max="100" style="padding-left:12px" oninput="calculate()">
+          <span class="field-suffix">%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-grid">
+    <div class="result-card">
+      <div class="result-label">Meta Ads improvement</div>
+      <div class="result-value" id="ads-result">$0</div>
+      <div class="result-sub">Est. revenue gain from +25% ROAS improvement via better creative & targeting</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">CRO improvement</div>
+      <div class="result-value" id="cro-result">$0</div>
+      <div class="result-sub">Est. revenue gain from +0.8pp conversion rate lift on existing traffic</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">Retention system</div>
+      <div class="result-value" id="ret-result">$0</div>
+      <div class="result-sub">Est. revenue recovered by reducing churn 40% + save flows + referrals</div>
+    </div>
+  </div>
+
+  <div class="roi-row">
+    <div class="roi-left">
+      <span class="roi-label">Total system value / month</span>
+      <div class="roi-value">+<span id="total-result">$0</span></div>
+      <div class="breakdown" id="breakdown" style="margin-top:8px"></div>
+    </div>
+    <div class="roi-right">
+      <span class="fee-label">Vitalevo fee</span>
+      <span class="fee-value">$1,800/mo</span>
+      <div class="multiplier" id="multiplier">— x ROI</div>
+    </div>
+  </div>
+
+  <p class="note">Projections based on industry benchmarks for pet care DTC brands. Actual results vary. Baseline documented in writing during week 1 of onboarding.</p>
+</div>
+
+<script>
+function fmt(n) {
+  if (n >= 1000) return '$' + (n/1000).toFixed(1) + 'K';
+  return '$' + Math.round(n);
+}
+
+function calculate() {
+  const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+  const adspend = parseFloat(document.getElementById('adspend').value) || 0;
+  const roas = parseFloat(document.getElementById('roas').value) || 0;
+  const orders = parseFloat(document.getElementById('orders').value) || 0;
+  const subscribers = parseFloat(document.getElementById('subscribers').value) || 0;
+  const churn = parseFloat(document.getElementById('churn').value) || 0;
+  const aov = parseFloat(document.getElementById('aov').value) || 0;
+  const cvr = parseFloat(document.getElementById('cvr').value) || 0;
+
+  // Meta Ads: 25% ROAS improvement on current ad spend
+  const newRoas = roas * 1.25;
+  const adsGain = adspend * (newRoas - roas);
+
+  // CRO: +0.8pp conversion rate lift
+  // Estimate monthly site visits from orders / cvr
+  const visits = cvr > 0 ? (orders / (cvr / 100)) : 0;
+  const newCvr = cvr + 0.8;
+  const newOrders = visits * (newCvr / 100);
+  const croGain = (newOrders - orders) * aov;
+
+  // Retention: 40% churn reduction + save flows (15% of churners saved) + referrals (5% of orders)
+  const churnedSubs = subscribers * (churn / 100);
+  const savedSubs = churnedSubs * 0.40;
+  const saveFlowSubs = churnedSubs * 0.15;
+  const retentionGain = (savedSubs + saveFlowSubs) * aov;
+  const referralGain = orders * 0.05 * aov;
+  const retGain = retentionGain + referralGain;
+
+  const total = adsGain + croGain + retGain;
+  const roiMultiple = total > 0 ? (total / 1800).toFixed(1) : '0';
+
+  document.getElementById('ads-result').textContent = fmt(adsGain);
+  document.getElementById('cro-result').textContent = fmt(croGain);
+  document.getElementById('ret-result').textContent = fmt(retGain);
+  document.getElementById('total-result').textContent = fmt(total);
+  document.getElementById('multiplier').textContent = roiMultiple + 'x ROI on your investment';
+
+  const breakdown = document.getElementById('breakdown');
+  breakdown.innerHTML = `
+    <div class="breakdown-row">
+      <div class="breakdown-label"><div class="breakdown-dot"></div>Meta Ads</div>
+      <div class="breakdown-value">${fmt(adsGain)}/mo</div>
+    </div>
+    <div class="breakdown-row">
+      <div class="breakdown-label"><div class="breakdown-dot" style="opacity:0.7"></div>CRO</div>
+      <div class="breakdown-value">${fmt(croGain)}/mo</div>
+    </div>
+    <div class="breakdown-row">
+      <div class="breakdown-label"><div class="breakdown-dot" style="opacity:1"></div>Retention</div>
+      <div class="breakdown-value">${fmt(retGain)}/mo</div>
+    </div>
+  `;
+}
+
+calculate();
+</script>
+</body>
+</html>
