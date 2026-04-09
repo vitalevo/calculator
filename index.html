@@ -6,433 +6,374 @@
 <title>Vitalevo — Growth Calculator</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --purple: #9620FF;
-  --purple-light: rgba(150,32,255,0.07);
-  --purple-border: rgba(150,32,255,0.18);
-  --cyan: #78E3FD;
-  --bg: #EEF8FF;
-  --white: #FFFFFF;
-  --dark: #0D0D0D;
-  --muted: #6B7280;
-  --border: rgba(0,0,0,0.07);
-  --green: #16A34A;
-  --green-bg: rgba(22,163,74,0.07);
-  --red: #DC2626;
+:root{
+  --purple:#9620FF;--pl:rgba(150,32,255,0.07);--pb:rgba(150,32,255,0.16);
+  --dark:#0D0D0D;--muted:#6B7280;--border:rgba(0,0,0,0.07);
+  --green:#16A34A;--white:#fff;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(180deg,#fff 0%,#EEF8FF 100%);background-attachment:fixed;min-height:100vh;color:var(--dark);padding:2.5rem 2rem 3rem}
+.wrap{max-width:1080px;margin:0 auto}
 
-body {
-  font-family:'DM Sans',sans-serif;
-  background: linear-gradient(180deg, #FFFFFF 0%, #EEF8FF 100%);
-  background-attachment: fixed;
-  min-height:100vh;
-  color:var(--dark);
-  padding:2.5rem 2rem 3rem;
-}
+.header{margin-bottom:2rem}
+.tag{display:inline-block;font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple);background:var(--pl);padding:5px 12px;border-radius:4px;margin-bottom:1rem}
+.headline{font-size:34px;font-weight:900;letter-spacing:-0.03em;line-height:1.08;margin-bottom:0.5rem}
+.headline span{color:var(--purple)}
+.sub{font-size:13px;color:var(--muted);line-height:1.65;max-width:520px}
 
-.wrap { max-width:1060px; margin:0 auto; }
-
-.header { margin-bottom:2.5rem; }
-.tag { display:inline-block; font-size:10px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--purple); background:var(--purple-light); padding:5px 12px; border-radius:4px; margin-bottom:1rem; }
-.headline { font-size:34px; font-weight:900; letter-spacing:-0.03em; line-height:1.08; margin-bottom:0.5rem; }
-.headline span { color:var(--purple); }
-.sub { font-size:13px; color:var(--muted); line-height:1.65; max-width:500px; }
-
-/* MAIN GRID */
-.main-grid {
+/* ROW-BASED GRID — every metric is a row spanning all 3 cols */
+.calc-grid{
   display:grid;
-  grid-template-columns: 1fr 28px 1fr;
-  gap:0;
+  grid-template-columns:1fr 28px 1fr;
+  row-gap:0;
   margin-bottom:1.5rem;
 }
 
-/* COLUMN HEADERS */
-.col-head {
-  display:flex; align-items:center; gap:8px;
-  padding-bottom:12px;
-  border-bottom:0.5px solid var(--border);
-  margin-bottom:14px;
+/* HEADER ROW */
+.ch-left,.ch-right{
+  display:flex;align-items:center;gap:8px;
+  padding-bottom:10px;border-bottom:0.5px solid var(--border);
+  margin-bottom:12px;
 }
-.col-title { font-size:10px; font-weight:500; letter-spacing:0.13em; text-transform:uppercase; }
-.col-title.left { color:var(--muted); }
-.col-title.right { color:var(--purple); }
-.col-badge { font-size:9px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; padding:2px 7px; border-radius:3px; }
-.badge-left { background:rgba(0,0,0,0.05); color:var(--muted); }
-.badge-right { background:var(--purple-light); color:var(--purple); }
+.col-title{font-size:10px;font-weight:500;letter-spacing:0.13em;text-transform:uppercase}
+.col-title.l{color:var(--muted)}.col-title.r{color:var(--purple)}
+.cbadge{font-size:9px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px}
+.cb-l{background:rgba(0,0,0,0.05);color:var(--muted)}
+.cb-r{background:var(--pl);color:var(--purple)}
+.ch-mid{margin-bottom:12px;border-bottom:0.5px solid var(--border);padding-bottom:10px}
 
-/* METRIC ROWS */
-.metric { margin-bottom:9px; }
-.metric-label {
-  font-size:11px; font-weight:500; color:var(--muted);
-  letter-spacing:0.02em; margin-bottom:4px;
-  display:flex; align-items:center; gap:5px;
-}
-.mlabel-dot { width:4px; height:4px; border-radius:50%; background:var(--purple); opacity:0.35; flex-shrink:0; }
+/* METRIC CELL */
+.mc{padding-bottom:10px;display:flex;flex-direction:column}
+.mc-r{padding-bottom:10px;padding-top:19px;display:flex;flex-direction:column}
+.mc-mid{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-bottom:10px;padding-top:19px}
+.arr-field{height:40px;display:flex;align-items:center;justify-content:center}
+.mlabel{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.02em;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.mdot{width:4px;height:4px;border-radius:50%;background:var(--purple);opacity:0.35;flex-shrink:0}
+.arr{font-size:11px;color:var(--muted);opacity:0.2}
 
 /* INPUT */
-.input-wrap { position:relative; }
-.pfx { position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:13px; font-weight:500; color:var(--muted); pointer-events:none; }
-.sfx { position:absolute; right:11px; top:50%; transform:translateY(-50%); font-size:13px; font-weight:500; color:var(--muted); pointer-events:none; }
-input[type=number] {
-  width:100%; height:40px;
-  background:#FFFFFF;
-  border:0.5px solid var(--border);
-  border-radius:8px;
-  font-family:'DM Sans',sans-serif;
-  font-size:14px; font-weight:500; color:var(--dark);
-  padding:0 36px 0 28px;
-  outline:none;
-  transition:border-color 0.15s;
+.iw{position:relative}
+.pfx{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:500;color:var(--muted);pointer-events:none}
+.sfx{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:500;color:var(--muted);pointer-events:none}
+input[type=number]{
+  width:100%;height:40px;background:#fff;
+  border:0.5px solid var(--border);border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--dark);
+  padding:0 36px 0 28px;outline:none;transition:border-color 0.15s;
   -moz-appearance:textfield;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
-input[type=number]:focus { border-color:var(--purple); }
-input.no-prefix { padding-left:12px; }
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--purple)}
+input.np{padding-left:12px}
 
-/* OUTPUT */
-.out-card {
-  width:100%; min-height:40px;
-  background:var(--purple-light);
-  border:0.5px solid var(--purple-border);
-  border-radius:8px;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 10px 0 12px;
-  gap:6px;
+/* OUTPUT CARD — output + improvement row stacked */
+.out-card{
+  background:var(--pl);border:0.5px solid var(--pb);
+  border-radius:8px;overflow:hidden;
 }
-.out-val { font-size:14px; font-weight:700; color:var(--purple); white-space:nowrap; }
-.out-deltas { display:flex; flex-direction:column; align-items:flex-end; gap:1px; }
-.d-pct { font-size:10px; font-weight:600; color:var(--green); white-space:nowrap; }
-.d-dollar { font-size:10px; font-weight:600; color:var(--green); white-space:nowrap; }
-.d-neg { color:var(--green); }
-.d-neutral { color:var(--muted); }
+.out-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 10px 0 12px;height:40px;
+}
+.out-val{font-size:14px;font-weight:700;color:var(--purple)}
+.out-deltas{display:flex;gap:6px;align-items:center}
+.dpct{font-size:10px;font-weight:600;color:var(--green)}
+.ddol{font-size:10px;font-weight:600;color:var(--green)}
+.dna{font-size:10px;font-weight:400;color:var(--muted)}
 
-/* MID ARROWS */
-.mid-col { display:flex; flex-direction:column; padding-top:42px; }
-.arrow-spacer { height:40px; margin-bottom:9px; display:flex; align-items:center; justify-content:center; }
-.arr { font-size:12px; color:var(--muted); opacity:0.25; }
+/* IMPROVEMENT ROW inside out-card */
+.imp-row{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px;
+  background:rgba(150,32,255,0.04);
+  border-top:0.5px solid rgba(150,32,255,0.1);
+}
+.imp-lbl{font-size:10px;color:var(--muted);white-space:nowrap;flex-shrink:0;min-width:70px}
+.imp-wrap{position:relative;width:72px;flex-shrink:0}
+input.imp{
+  width:100%;height:26px;background:#fff;
+  border:0.5px solid rgba(150,32,255,0.2);border-radius:5px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--purple);
+  padding:0 22px 0 8px;outline:none;-moz-appearance:textfield;
+}
+input.imp::-webkit-inner-spin-button,input.imp::-webkit-outer-spin-button{-webkit-appearance:none}
+input.imp:focus{border-color:var(--purple)}
+.imp-sfx{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:var(--purple);pointer-events:none}
+.imp-note{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* static out card (no imp-row) */
+.out-card.static .out-top{height:40px}
+
+/* RESET */
+.reset-row{display:flex;justify-content:flex-end;margin-bottom:10px}
+.reset-btn{font-size:11px;font-weight:500;color:var(--muted);background:none;border:0.5px solid var(--border);border-radius:5px;padding:4px 10px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.reset-btn:hover{color:var(--purple);border-color:var(--pb)}
 
 /* TOTALS */
-.totals-wrap {
-  display:grid;
-  grid-template-columns:1fr 28px 1fr;
-  gap:0;
-  margin-bottom:1.25rem;
-}
-.total-box { padding:1.25rem 1.5rem; border-radius:10px; }
-.total-box.t-left { background:#FFFFFF; border:0.5px solid var(--border); }
-.total-box.t-right { background:var(--purple); }
-.t-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
-.t-left .t-label { color:var(--muted); }
-.t-right .t-label { color:rgba(255,255,255,0.55); }
-.t-value { font-size:30px; font-weight:900; letter-spacing:-0.03em; line-height:1; }
-.t-left .t-value { color:var(--dark); }
-.t-right .t-value { color:#fff; }
-.t-sub { font-size:11px; margin-top:5px; }
-.t-left .t-sub { color:var(--muted); }
-.t-right .t-sub { color:rgba(255,255,255,0.5); }
-.totals-mid { display:flex; align-items:center; justify-content:center; }
-.vs { width:28px; height:28px; border-radius:50%; background:#fff; border:0.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:var(--muted); }
+.totals{display:grid;grid-template-columns:1fr 28px 1fr;margin-bottom:1.25rem;gap:0}
+.tbox{padding:1.25rem 1.5rem;border-radius:10px;margin:0 8px}
+.tbox.tl{background:#fff;border:0.5px solid var(--border)}
+.tbox.tr{background:var(--purple)}
+.tlabel{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
+.tl .tlabel{color:var(--muted)}.tr .tlabel{color:rgba(255,255,255,0.55)}
+.tval{font-size:30px;font-weight:900;letter-spacing:-0.03em;line-height:1}
+.tl .tval{color:var(--dark)}.tr .tval{color:#fff}
+.tsub{font-size:11px;margin-top:5px}
+.tl .tsub{color:var(--muted)}.tr .tsub{color:rgba(255,255,255,0.5)}
+.tmid{display:flex;align-items:center;justify-content:center}
+.vs{width:26px;height:26px;border-radius:50%;background:#fff;border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted)}
 
 /* STRIP */
-.strip {
-  display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
-}
-.strip-card { background:#FFFFFF; border:0.5px solid var(--border); border-radius:10px; padding:1.1rem 1.25rem; }
-.s-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
-.s-val { font-size:24px; font-weight:900; letter-spacing:-0.02em; color:var(--purple); }
-.s-sub { font-size:11px; color:var(--muted); margin-top:3px; }
-
-.note { font-size:11px; color:var(--muted); text-align:center; margin-top:1.25rem; line-height:1.65; }
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sc{background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem}
+.sl{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.sv{font-size:24px;font-weight:900;letter-spacing:-0.02em;color:var(--purple)}
+.ss{font-size:11px;color:var(--muted);margin-top:3px}
+.note{font-size:11px;color:var(--muted);text-align:center;margin-top:1.25rem;line-height:1.65}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="header">
-    <div class="tag">Run your numbers</div>
-    <h1 class="headline">What is broken retention<br><span>actually costing you?</span></h1>
-    <p class="sub">Enter your current metrics. See the exact dollar impact of fixing your ads, your conversion rate, and your retention system — in real time.</p>
+<div class="header">
+  <div class="tag">Run your numbers</div>
+  <h1 class="headline">What is broken retention<br><span>actually costing you?</span></h1>
+  <p class="sub">Enter your current metrics on the left. Adjust the projected improvements on the right — or leave the defaults and see the baseline impact.</p>
+</div>
+
+<div class="reset-row">
+  <button class="reset-btn" onclick="resetDefaults()">↺ Reset improvements to defaults</button>
+</div>
+
+<div class="calc-grid">
+
+  <!-- HEADER ROW -->
+  <div class="ch-left">
+    <span class="col-title l">Current state</span>
+    <span class="cbadge cb-l">Your numbers</span>
+  </div>
+  <div class="ch-mid"></div>
+  <div class="ch-right">
+    <span class="col-title r">With Vitalevo</span>
+    <span class="cbadge cb-r">Projected</span>
   </div>
 
-  <div class="main-grid">
+  <!-- ROW: Monthly Revenue (left only) -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Monthly Revenue</div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-rev" value="20000" min="0" oninput="calc()"></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r" style="visibility:hidden">
+    <div class="out-card static"><div class="out-top"><span class="out-val">—</span></div></div>
+  </div>
 
-    <!-- LEFT -->
-    <div>
-      <div class="col-head">
-        <span class="col-title left">Current state</span>
-        <span class="col-badge badge-left">They fill in</span>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Revenue</div>
-        <div class="input-wrap"><span class="pfx">$</span><input type="number" id="i-rev" value="30000" min="0" oninput="calc()"></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>ROAS</div>
-        <div class="input-wrap"><input type="number" id="i-roas" value="3.2" step="0.1" min="0" class="no-prefix" oninput="calc()"><span class="sfx">x</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Conversion Rate</div>
-        <div class="input-wrap"><input type="number" id="i-cvr" value="2.0" step="0.1" min="0" max="100" class="no-prefix" oninput="calc()"><span class="sfx">%</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Avg Order Value</div>
-        <div class="input-wrap"><span class="pfx">$</span><input type="number" id="i-aov" value="55" min="0" oninput="calc()"></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Active Subscribers</div>
-        <div class="input-wrap"><input type="number" id="i-subs" value="150" min="0" class="no-prefix" oninput="calc()"></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Churn Rate</div>
-        <div class="input-wrap"><input type="number" id="i-churn" value="12" step="0.1" min="0" max="100" class="no-prefix" oninput="calc()"><span class="sfx">%</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Customer LTV</div>
-        <div class="input-wrap"><span class="pfx">$</span><input type="number" id="i-ltv" value="120" min="0" oninput="calc()"></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Referral Revenue</div>
-        <div class="input-wrap"><span class="pfx">$</span><input type="number" id="i-ref" value="0" min="0" oninput="calc()"></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Ad Spend</div>
-        <div class="input-wrap"><span class="pfx">$</span><input type="number" id="i-ads" value="3000" min="0" oninput="calc()"></div>
-      </div>
-
-    </div>
-
-    <!-- MID -->
-    <div class="mid-col" id="mid-col">
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-      <div class="arrow-spacer"><span class="arr">→</span></div>
-    </div>
-
-    <!-- RIGHT -->
-    <div>
-      <div class="col-head">
-        <span class="col-title right">With Vitalevo</span>
-        <span class="col-badge badge-right">Projected</span>
-      </div>
-
-      <div class="metric" style="visibility:hidden">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Revenue</div>
-        <div class="out-card"><span class="out-val">—</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>ROAS</div>
-        <div class="out-card"><span class="out-val" id="o-roas">—</span><div class="out-deltas"><span class="d-pct" id="op-roas"></span><span class="d-dollar" id="od-roas"></span></div></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Conversion Rate</div>
-        <div class="out-card"><span class="out-val" id="o-cvr">—</span><div class="out-deltas"><span class="d-pct" id="op-cvr"></span><span class="d-dollar" id="od-cvr"></span></div></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Avg Order Value</div>
-        <div class="out-card"><span class="out-val" id="o-aov">—</span><div class="out-deltas"><span class="d-pct" id="op-aov"></span><span class="d-dollar" id="od-aov"></span></div></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Active Subscribers</div>
-        <div class="out-card"><span class="out-val" id="o-subs">—</span><div class="out-deltas"><span class="d-pct" id="op-subs"></span><span class="d-dollar" id="od-subs"></span></div></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Churn Rate</div>
-        <div class="out-card"><span class="out-val" id="o-churn">—</span><div class="out-deltas"><span class="d-pct" id="op-churn"></span><span class="d-dollar" id="od-churn"></span></div></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Customer LTV</div>
-        <div class="out-card"><span class="out-val" id="o-ltv">—</span><div class="out-deltas"><span class="d-pct" id="op-ltv"></span><span class="d-dollar" id="od-ltv"></span></div></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Referral Revenue</div>
-        <div class="out-card"><span class="out-val" id="o-ref">—</span><div class="out-deltas"><span class="d-pct" id="op-ref"></span><span class="d-dollar" id="od-ref"></span></div></div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label"><div class="mlabel-dot"></div>Monthly Ad Spend</div>
-        <div class="out-card"><span class="out-val" id="o-ads">—</span><div class="out-deltas"><span class="d-dollar" id="od-ads" style="color:var(--muted);font-weight:400">Unchanged</span></div></div>
-      </div>
-
+  <!-- ROW: ROAS -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>ROAS</div>
+    <div class="iw"><input type="number" id="i-roas" value="2.4" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">x</span></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-roas">—</span><div class="out-deltas"><span class="dpct" id="dp-roas"></span><span class="ddol" id="dd-roas"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Improvement</span><div class="imp-wrap"><input type="number" class="imp" id="p-roas" value="20" step="1" min="0" max="200" oninput="calc()"><span class="imp-sfx">%</span></div><span class="imp-note">+% vs current</span></div>
     </div>
   </div>
 
-  <!-- TOTALS -->
-  <div class="totals-wrap">
-    <div class="total-box t-left">
-      <div class="t-label">Current monthly revenue</div>
-      <div class="t-value" id="t-current">—</div>
-      <div class="t-sub">Baseline</div>
-    </div>
-    <div class="totals-mid"><div class="vs">VS</div></div>
-    <div class="total-box t-right">
-      <div class="t-label">Projected monthly revenue</div>
-      <div class="t-value" id="t-vitalevo">—</div>
-      <div class="t-sub" id="t-sub">With the full system</div>
+  <!-- ROW: CVR -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Conversion Rate</div>
+    <div class="iw"><input type="number" id="i-cvr" value="1.4" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-cvr">—</span><div class="out-deltas"><span class="dpct" id="dp-cvr"></span><span class="ddol" id="dd-cvr"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Improvement</span><div class="imp-wrap"><input type="number" class="imp" id="p-cvr" value="0.5" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">pp</span></div><span class="imp-note">+pp added</span></div>
     </div>
   </div>
 
-  <!-- STRIP -->
-  <div class="strip">
-    <div class="strip-card">
-      <div class="s-label">Extra revenue / month</div>
-      <div class="s-val" id="s-monthly">—</div>
-      <div class="s-sub">vs. current baseline</div>
-    </div>
-    <div class="strip-card">
-      <div class="s-label">ROI on Vitalevo fee</div>
-      <div class="s-val" id="s-roi">—</div>
-      <div class="s-sub">at $1,800/mo</div>
-    </div>
-    <div class="strip-card">
-      <div class="s-label">Annual impact</div>
-      <div class="s-val" id="s-annual">—</div>
-      <div class="s-sub">projected 12-month gain</div>
+  <!-- ROW: AOV -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Avg Order Value</div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-aov" value="42" min="0" oninput="calc()"></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-aov">—</span><div class="out-deltas"><span class="dpct" id="dp-aov"></span><span class="ddol" id="dd-aov"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Improvement</span><div class="imp-wrap"><input type="number" class="imp" id="p-aov" value="8" step="1" min="0" max="100" oninput="calc()"><span class="imp-sfx">%</span></div><span class="imp-note">+% via upsells</span></div>
     </div>
   </div>
 
-  <p class="note">Projections based on industry benchmarks for pet care DTC brands. Actual results vary.<br>Baseline documented in writing during week 1 of onboarding.</p>
+  <!-- ROW: Subscribers -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Active Subscribers</div>
+    <div class="iw"><input type="number" id="i-subs" value="80" min="0" class="np" oninput="calc()"></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-subs">—</span><div class="out-deltas"><span class="dpct" id="dp-subs"></span><span class="ddol" id="dd-subs"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">New subs / mo</span><div class="imp-wrap"><input type="number" class="imp" id="p-subs" value="10" step="1" min="0" oninput="calc()"><span class="imp-sfx">#</span></div><span class="imp-note">saved + converted</span></div>
+    </div>
+  </div>
+
+  <!-- ROW: Churn -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Monthly Churn Rate</div>
+    <div class="iw"><input type="number" id="i-churn" value="16" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-churn">—</span><div class="out-deltas"><span class="dpct" id="dp-churn"></span><span class="ddol" id="dd-churn"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Reduction</span><div class="imp-wrap"><input type="number" class="imp" id="p-churn" value="30" step="1" min="0" max="99" oninput="calc()"><span class="imp-sfx">%</span></div><span class="imp-note">% churn reduced</span></div>
+    </div>
+  </div>
+
+  <!-- ROW: LTV -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Customer LTV</div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ltv" value="78" min="0" oninput="calc()"></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-ltv">—</span><div class="out-deltas"><span class="dpct" id="dp-ltv"></span><span class="ddol" id="dd-ltv"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Improvement</span><div class="imp-wrap"><input type="number" class="imp" id="p-ltv" value="25" step="1" min="0" max="200" oninput="calc()"><span class="imp-sfx">%</span></div><span class="imp-note">+% via retention</span></div>
+    </div>
+  </div>
+
+  <!-- ROW: Referral -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Monthly Referral Revenue</div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ref" value="0" min="0" oninput="calc()"></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-ref">—</span><div class="out-deltas"><span class="ddol" id="dd-ref"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Increase</span><div class="imp-wrap"><input type="number" class="imp" id="p-ref" value="5" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div><span class="imp-note">% of orders referred</span></div>
+    </div>
+  </div>
+
+  <!-- ROW: Ad Spend -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Monthly Ad Spend</div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ads" value="2000" min="0" oninput="calc()"></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-ads">—</span><div class="out-deltas"><span class="dpct" id="dp-ads"></span><span class="ddol" id="dd-ads"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Increase</span><div class="imp-wrap"><input type="number" class="imp" id="p-ads" value="0" step="100" min="0" oninput="calc()"><span class="imp-sfx">$</span></div><span class="imp-note">$ added to spend</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOTALS -->
+<div class="totals">
+  <div class="tbox tl">
+    <div class="tlabel">Current monthly revenue</div>
+    <div class="tval" id="t-cur">—</div>
+    <div class="tsub">Baseline</div>
+  </div>
+  <div class="tmid"><div class="vs">VS</div></div>
+  <div class="tbox tr">
+    <div class="tlabel">Projected monthly revenue</div>
+    <div class="tval" id="t-new">—</div>
+    <div class="tsub" id="t-sub">With the full system</div>
+  </div>
+</div>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="sc"><div class="sl">Extra revenue / month</div><div class="sv" id="s-mo">—</div><div class="ss">vs. current baseline</div></div>
+  <div class="sc"><div class="sl">ROI on Vitalevo fee</div><div class="sv" id="s-roi">—</div><div class="ss">at $1,800/mo</div></div>
+  <div class="sc"><div class="sl">Annual impact</div><div class="sv" id="s-yr">—</div><div class="ss">projected 12-month gain</div></div>
+</div>
+
+<p class="note">Projections are estimates based on the improvement percentages above. Actual results vary by brand, market, and execution.<br>Baseline documented in writing during week 1 of onboarding.</p>
 
 </div>
 <script>
-const f$ = n => {
-  n = Math.round(n);
-  if(Math.abs(n)>=1000000) return '$'+(n/1000000).toFixed(1)+'M';
-  if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(1)+'K';
-  return '$'+n;
-};
-const fPct = n => n.toFixed(1)+'%';
-const fX   = n => n.toFixed(1)+'x';
-const fN   = n => Math.round(n).toLocaleString();
+const DEFS={roas:20,cvr:0.5,aov:8,subs:10,churn:30,ltv:25,ref:5,ads:0};
+function resetDefaults(){Object.entries(DEFS).forEach(([k,v])=>{document.getElementById('p-'+k).value=v});calc()}
 
-const dPct = (nw,old) => {
-  const d = nw - old;
-  if(Math.abs(d)<0.01) return '';
-  return (d>0?'+':'')+d.toFixed(1)+'%';
-};
-const d$ = (nw,old) => {
-  const d = Math.round(nw - old);
-  if(Math.abs(d)<1) return '';
-  return (d>0?'+':'')+f$(d);
-};
-const dX = (nw,old) => {
-  const d = nw - old;
-  if(Math.abs(d)<0.01) return '';
-  return (d>0?'+':'')+d.toFixed(1)+'x';
-};
+const f$=n=>{n=Math.round(n);if(Math.abs(n)>=1e6)return'$'+(n/1e6).toFixed(1)+'M';if(Math.abs(n)>=1e3)return'$'+(n/1e3).toFixed(1)+'K';return'$'+n};
+const fX=n=>n.toFixed(2)+'x';
+const fP=n=>n.toFixed(1)+'%';
+const fN=n=>Math.round(n).toLocaleString();
 
-function set(valId, val, pctId, pctStr, dolId, dolStr) {
-  document.getElementById(valId).textContent = val;
-  if(pctId) document.getElementById(pctId).textContent = pctStr||'';
-  if(dolId) {
-    const el = document.getElementById(dolId);
-    el.textContent = dolStr||'';
-    el.style.color = (dolStr&&dolStr.startsWith('+')) ? 'var(--green)' : dolStr ? 'var(--muted)' : '';
-  }
+function row(valId,val,pctId,pctStr,dolId,dolStr){
+  document.getElementById(valId).textContent=val;
+  if(pctId){const e=document.getElementById(pctId);e.textContent=pctStr||'';e.style.color=pctStr?'var(--green)':''}
+  if(dolId){const e=document.getElementById(dolId);e.textContent=dolStr||'';e.style.color=dolStr?'var(--green)':''}
 }
 
-function calc() {
-  const rev   = parseFloat(document.getElementById('i-rev').value)   ||0;
-  const roas  = parseFloat(document.getElementById('i-roas').value)  ||0;
-  const cvr   = parseFloat(document.getElementById('i-cvr').value)   ||0;
-  const aov   = parseFloat(document.getElementById('i-aov').value)   ||0;
-  const subs  = parseFloat(document.getElementById('i-subs').value)  ||0;
-  const churn = parseFloat(document.getElementById('i-churn').value) ||0;
-  const ltv   = parseFloat(document.getElementById('i-ltv').value)   ||0;
-  const ref   = parseFloat(document.getElementById('i-ref').value)   ||0;
-  const ads   = parseFloat(document.getElementById('i-ads').value)   ||0;
+function calc(){
+  const rev  =+document.getElementById('i-rev').value||0;
+  const roas =+document.getElementById('i-roas').value||0;
+  const cvr  =+document.getElementById('i-cvr').value||0;
+  const aov  =+document.getElementById('i-aov').value||0;
+  const subs =+document.getElementById('i-subs').value||0;
+  const churn=+document.getElementById('i-churn').value||0;
+  const ltv  =+document.getElementById('i-ltv').value||0;
+  const ref  =+document.getElementById('i-ref').value||0;
+  const ads  =+document.getElementById('i-ads').value||0;
 
-  // Derived current
+  const pRoas =+document.getElementById('p-roas').value||0;
+  const pCvr  =+document.getElementById('p-cvr').value||0;
+  const pAov  =+document.getElementById('p-aov').value||0;
+  const pSubs =+document.getElementById('p-subs').value||0;
+  const pChurn=+document.getElementById('p-churn').value||0;
+  const pLtv  =+document.getElementById('p-ltv').value||0;
+  const pRef  =+document.getElementById('p-ref').value||0;
+  const pAds  =+document.getElementById('p-ads').value||0;
+
   const orders = aov>0 ? rev/aov : 0;
   const traffic = cvr>0 ? orders/(cvr/100) : 0;
-  const currentSubRev = subs * aov; // monthly subscriber revenue
 
-  // --- PROJECTIONS ---
+  const newRoas  = roas*(1+pRoas/100);
+  const newCvr   = cvr+pCvr;
+  const newAov   = aov*(1+pAov/100);
+  const newSubs  = subs+pSubs;
+  const newChurn = churn*(1-pChurn/100);
+  const newLtv   = ltv*(1+pLtv/100);
+  const newAds   = ads+pAds;
 
-  // ROAS: +25% (Reviews improve ad performance + better creative)
-  const newRoas = roas * 1.25;
-  const roasGain = ads * (newRoas - roas);
+  const roasGain  = newAds*(newRoas-roas) + pAds*newRoas;
+  const newOrders = traffic*(newCvr/100);
+  const cvrGain   = (newOrders-orders)*newAov;
+  const aovGain   = orders*(newAov-aov);
+  const subsGain  = pSubs*newAov;
+  const churnGain = subs*((churn-newChurn)/100)*newAov;
+  const ltvGain   = (newLtv-ltv)*(subs/12);
+  const newRef    = ref+(orders*(pRef/100)*newAov);
+  const refGain   = newRef-ref;
 
-  // CVR: +0.8pp (Reviews on-page, Loyalty repeat visits)
-  const newCvr = cvr + 0.8;
-  const newOrders = traffic * (newCvr/100);
-  const cvrGain = (newOrders - orders) * aov;
+  const totalGain = roasGain+cvrGain+aovGain+subsGain+churnGain+ltvGain+refGain;
+  const totalNew  = rev+totalGain;
+  const roi       = totalGain>0?totalGain/1800:0;
 
-  // AOV: +12% (Upsells via Stay AI + Subscription bundles)
-  const newAov = aov * 1.12;
-  const aovGain = orders * (newAov - aov);
+  row('o-roas', fX(newRoas),  'dp-roas',pRoas?'+'+pRoas+'%':'',   'dd-roas',roasGain>0?'+'+f$(roasGain):'');
+  row('o-cvr',  fP(newCvr),   'dp-cvr', pCvr?'+'+pCvr+'pp':'',   'dd-cvr', cvrGain>0?'+'+f$(cvrGain):'');
+  row('o-aov',  f$(newAov),   'dp-aov', pAov?'+'+pAov+'%':'',     'dd-aov', aovGain>0?'+'+f$(aovGain):'');
+  row('o-subs', fN(newSubs)+' subs','dp-subs',pSubs?'+'+pSubs:'', 'dd-subs',subsGain>0?'+'+f$(subsGain):'');
+  row('o-churn',fP(newChurn), 'dp-churn',pChurn?'-'+pChurn+'%':'','dd-churn',churnGain>0?'+'+f$(churnGain):'');
+  row('o-ltv',  f$(newLtv),   'dp-ltv', pLtv?'+'+pLtv+'%':'',     'dd-ltv', ltvGain>0?'+'+f$(ltvGain):'');
+  row('o-ref',  f$(newRef),   null,'',                             'dd-ref', refGain>0?'+'+f$(refGain):'');
+  row('o-ads',  f$(newAds),   'dp-ads', pAds?'+'+f$(pAds):'',     'dd-ads', pAds>0?'+'+f$(pAds*newRoas)+' rev':'');
 
-  // Active Subscribers: save flows recover 40% of churning subs + 8% of one-time buyers convert to sub
-  const churningSubs = subs * (churn/100);
-  const savedSubs = churningSubs * 0.40;
-  const newSubsFromBuyers = orders * 0.08;
-  const newSubs = subs + savedSubs + newSubsFromBuyers;
-  const subsGain = newSubs - subs;
-  const subsGainRev = (savedSubs + newSubsFromBuyers) * newAov;
-
-  // Churn: -40% (Save Flows + Subscriptions + Loyalty + Upsells all reduce churn)
-  const newChurn = churn * 0.60;
-  const churnSavedRev = savedSubs * newAov;
-
-  // LTV: recalculate from new AOV + new churn
-  // LTV = AOV / monthly_churn_rate
-  const currentLTVcalc = churn>0 ? aov/(churn/100) : ltv;
-  const newLTVcalc     = newChurn>0 ? newAov/(newChurn/100) : ltv*1.67;
-  const ltvGain = newLTVcalc - currentLTVcalc;
-
-  // Referral Revenue: existing + 5% of orders at new AOV (Referral program)
-  const newRef = ref + (orders * 0.05 * newAov);
-  const refGain = newRef - ref;
-
-  // Total
-  const totalCurrent = rev;
-  const totalNew = rev + roasGain + cvrGain + aovGain + subsGainRev + churnSavedRev + refGain;
-  const gain = totalNew - totalCurrent;
-  const roi = gain>0 ? gain/1800 : 0;
-
-  // UPDATE UI
-  set('o-roas',  fX(newRoas),       'op-roas', dX(newRoas,roas), 'od-roas', d$(roasGain,0));
-  set('o-cvr',   fPct(newCvr),      'op-cvr',  dPct(newCvr,cvr),'od-cvr',  d$(cvrGain,0));
-  set('o-aov',   f$(newAov),        'op-aov',  dPct(newAov,aov).replace('%','%'), 'od-aov', d$(aovGain*orders/aov,0));
-  set('o-subs',  fN(newSubs)+' subs','op-subs', '+'+fN(subsGain), 'od-subs', d$(subsGainRev,0));
-  set('o-churn', fPct(newChurn),    'op-churn',dPct(newChurn,churn), 'od-churn', d$(churnSavedRev,0));
-  set('o-ltv',   f$(newLTVcalc),   'op-ltv',  dPct(newLTVcalc,currentLTVcalc), 'od-ltv', d$(ltvGain,0));
-  set('o-ref',   f$(newRef),        'op-ref',  d$(newRef,ref), 'od-ref', refGain>0?'+'+f$(refGain):'');
-  set('o-ads',   f$(ads),           null,'',   'od-ads','');
-  document.getElementById('od-ads').textContent='Unchanged';
-  document.getElementById('od-ads').style.color='var(--muted)';
-  document.getElementById('od-ads').style.fontWeight='400';
-
-  document.getElementById('t-current').textContent  = f$(totalCurrent);
-  document.getElementById('t-vitalevo').textContent = f$(totalNew);
-  document.getElementById('t-sub').textContent      = gain>0 ? '+'+f$(gain)+'/mo vs. now' : 'With the full system';
-
-  document.getElementById('s-monthly').textContent = gain>0?'+'+f$(gain):f$(gain);
-  document.getElementById('s-roi').textContent     = roi.toFixed(1)+'x';
-  document.getElementById('s-annual').textContent  = gain>0?'+'+f$(gain*12):f$(gain*12);
+  document.getElementById('t-cur').textContent=f$(rev);
+  document.getElementById('t-new').textContent=f$(totalNew);
+  document.getElementById('t-sub').textContent=totalGain>0?'+'+f$(totalGain)+'/mo vs. now':'With the full system';
+  document.getElementById('s-mo').textContent=totalGain>0?'+'+f$(totalGain):f$(totalGain);
+  document.getElementById('s-roi').textContent=roi.toFixed(1)+'x';
+  document.getElementById('s-yr').textContent=totalGain>0?'+'+f$(totalGain*12):f$(totalGain*12);
 }
 calc();
 </script>
