@@ -21,7 +21,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(180deg,#fff 0%,
 .headline span{color:var(--purple)}
 .sub{font-size:13px;color:var(--muted);line-height:1.65;max-width:520px}
 
-/* ROW-BASED GRID — every metric is a row spanning all 3 cols */
+/* ROW-BASED GRID */
 .calc-grid{
   display:grid;
   grid-template-columns:1fr 28px 1fr;
@@ -42,7 +42,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(180deg,#fff 0%,
 .cb-r{background:var(--pl);color:var(--purple)}
 .ch-mid{margin-bottom:12px;border-bottom:0.5px solid var(--border);padding-bottom:10px}
 
-/* METRIC CELL */
+/* METRIC CELLS */
 .mc{padding-bottom:10px;display:flex;flex-direction:column}
 .mc-r{padding-bottom:10px;padding-top:19px;display:flex;flex-direction:column}
 .mc-mid{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-bottom:10px;padding-top:19px}
@@ -66,7 +66,26 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 input[type=number]:focus{border-color:var(--purple)}
 input.np{padding-left:12px}
 
-/* OUTPUT CARD — output + improvement row stacked */
+/* DERIVED/CALCULATED DISPLAY */
+.derived-val{
+  width:100%;height:40px;
+  background:rgba(150,32,255,0.03);
+  border:0.5px dashed rgba(150,32,255,0.25);
+  border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  color:var(--purple);
+  padding:0 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  user-select:none;
+}
+.calc-badge{
+  font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  color:rgba(150,32,255,0.45);
+  background:rgba(150,32,255,0.08);
+  padding:2px 6px;border-radius:3px;flex-shrink:0;
+}
+
+/* OUTPUT CARD */
 .out-card{
   background:var(--pl);border:0.5px solid var(--pb);
   border-radius:8px;overflow:hidden;
@@ -79,9 +98,8 @@ input.np{padding-left:12px}
 .out-deltas{display:flex;gap:6px;align-items:center}
 .dpct{font-size:10px;font-weight:600;color:var(--green)}
 .ddol{font-size:10px;font-weight:600;color:var(--green)}
-.dna{font-size:10px;font-weight:400;color:var(--muted)}
 
-/* IMPROVEMENT ROW inside out-card */
+/* IMPROVEMENT ROW */
 .imp-row{
   display:flex;align-items:center;gap:8px;
   padding:5px 10px;
@@ -99,11 +117,8 @@ input.imp{
 input.imp::-webkit-inner-spin-button,input.imp::-webkit-outer-spin-button{-webkit-appearance:none}
 input.imp:focus{border-color:var(--purple)}
 .imp-sfx{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:var(--purple);pointer-events:none}
-.imp-note{font-size:10px;color:var(--muted);white-space:nowrap}
 
-/* static out card (no imp-row) */
-.out-card.static .out-top{height:40px}
-/* attribution line */
+/* ATTRIBUTION LINE */
 .attr{font-size:10px;color:var(--muted);padding:5px 12px;background:rgba(150,32,255,0.03);border-top:0.5px solid rgba(150,32,255,0.08);line-height:1.4;font-style:italic}
 
 /* RESET */
@@ -125,9 +140,10 @@ input.imp:focus{border-color:var(--purple)}
 .tmid{display:flex;align-items:center;justify-content:center}
 .vs{width:26px;height:26px;border-radius:50%;background:#fff;border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted)}
 
-/* STRIP */
-.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+/* STRIP — 4 columns */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .sc{background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem}
+.sc.sc-accent{background:var(--pl);border-color:var(--pb)}
 .sl{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .sv{font-size:24px;font-weight:900;letter-spacing:-0.02em;color:var(--purple)}
 .ss{font-size:11px;color:var(--muted);margin-top:3px}
@@ -161,26 +177,26 @@ input.imp:focus{border-color:var(--purple)}
     <span class="cbadge cb-r">Projected</span>
   </div>
 
-  <!-- ROW: Monthly Revenue (left only) -->
+  <!-- ROW: Monthly Revenue -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Revenue</div>
     <div class="iw"><span class="pfx">$</span><input type="number" id="i-rev" value="20000" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r" style="visibility:hidden">
-    <div class="out-card static"><div class="out-top"><span class="out-val">—</span></div></div>
+    <div class="out-card"><div class="out-top"><span class="out-val">—</span></div></div>
   </div>
 
   <!-- ROW: ROAS -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>ROAS</div>
-    <div class="iw"><input type="number" id="i-roas" value="2.4" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">x</span></div>
+    <div class="iw"><input type="number" id="i-roas" value="1.5" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">x</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-roas">—</span><div class="out-deltas"><span class="dpct" id="dp-roas"></span><span class="ddol" id="dd-roas"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">Target ROAS</span><div class="imp-wrap"><input type="number" class="imp" id="p-roas" value="3.2" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">x</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Target ROAS</span><div class="imp-wrap"><input type="number" class="imp" id="p-roas" value="2.5" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">x</span></div></div>
       <div class="attr">Better creative, hooks, and audience targeting</div>
     </div>
   </div>
@@ -188,28 +204,28 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: CVR -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Conversion Rate</div>
-    <div class="iw"><input type="number" id="i-cvr" value="1.4" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+    <div class="iw"><input type="number" id="i-cvr" value="1.5" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-cvr">—</span><div class="out-deltas"><span class="dpct" id="dp-cvr"></span><span class="ddol" id="dd-cvr"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+% points</span><div class="imp-wrap"><input type="number" class="imp" id="p-cvr" value="0.5" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
-      <div class="attr">Reviews on-page + ad-to-page alignment (CRO)</div>
+      <div class="imp-row"><span class="imp-lbl">Target CVR</span><div class="imp-wrap"><input type="number" class="imp" id="p-cvr" value="2.0" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="attr">Reviews on PDPs + checkout optimization + mobile UX + ad-to-page alignment</div>
     </div>
   </div>
 
   <!-- ROW: AOV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Avg Order Value</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-aov" value="42" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-aov" value="55" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-aov">—</span><div class="out-deltas"><span class="dpct" id="dp-aov"></span><span class="ddol" id="dd-aov"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+% lift</span><div class="imp-wrap"><input type="number" class="imp" id="p-aov" value="8" step="1" min="0" max="100" oninput="calc()"><span class="imp-sfx">%</span></div></div>
-      <div class="attr">In-portal upsells + subscription bundles (Stay AI)</div>
+      <div class="imp-row"><span class="imp-lbl">+% lift</span><div class="imp-wrap"><input type="number" class="imp" id="p-aov" value="15" step="1" min="0" max="100" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="attr">Post-purchase upsells, subscription add-ons &amp; bundles — applied to ~40% of orders</div>
     </div>
   </div>
 
@@ -223,14 +239,28 @@ input.imp:focus{border-color:var(--purple)}
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-subs">—</span><div class="out-deltas"><span class="dpct" id="dp-subs"></span><span class="ddol" id="dd-subs"></span></div></div>
       <div class="imp-row"><span class="imp-lbl">+% growth</span><div class="imp-wrap"><input type="number" class="imp" id="p-subs" value="20" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
-      <div class="attr">Save flows + referral-to-subscriber conversions</div>
+      <div class="attr">Subscription prompts + post-purchase offers + bundle incentives</div>
+    </div>
+  </div>
+
+  <!-- ROW: Referral -->
+  <div class="mc">
+    <div class="mlabel"><div class="mdot"></div>Monthly Referral Revenue</div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ref" value="400" min="0" oninput="calc()"></div>
+  </div>
+  <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
+  <div class="mc-r">
+    <div class="out-card">
+      <div class="out-top"><span class="out-val" id="o-ref">—</span><div class="out-deltas"><span class="ddol" id="dd-ref"></span></div></div>
+      <div class="imp-row"><span class="imp-lbl">% of orders</span><div class="imp-wrap"><input type="number" class="imp" id="p-ref" value="5" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="attr">Referral program (Okendo) + post-purchase flows</div>
     </div>
   </div>
 
   <!-- ROW: Churn -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Churn Rate</div>
-    <div class="iw"><input type="number" id="i-churn" value="16" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+    <div class="iw"><input type="number" id="i-churn" value="8" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
@@ -241,30 +271,29 @@ input.imp:focus{border-color:var(--purple)}
     </div>
   </div>
 
-  <!-- ROW: LTV — calculated, no input -->
+  <!-- ROW: LTV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Customer LTV</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ltv" value="78" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ltv" value="150" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
-      <div class="out-top"><span class="out-val" id="o-ltv">—</span><div class="out-deltas"><span class="dpct" id="dp-ltv"></span><span class="ddol" id="dd-ltv"></span></div></div>
-      <div class="attr">AOV ÷ monthly churn rate &nbsp;·&nbsp; <span id="ltv-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
+      <div class="out-top"><span class="out-val" id="o-ltv">—</span><div class="out-deltas"><span class="dpct" id="dp-ltv"></span></div></div>
+      <div class="attr">Your LTV scales with AOV — higher order value = more revenue per customer &nbsp;·&nbsp; <span id="ltv-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
     </div>
   </div>
 
-  <!-- ROW: Referral -->
+  <!-- ROW: LTV-Adjusted ROAS — derived, informational -->
   <div class="mc">
-    <div class="mlabel"><div class="mdot"></div>Monthly Referral Revenue</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ref" value="0" min="0" oninput="calc()"></div>
+    <div class="mlabel"><div class="mdot"></div>LTV-Adjusted ROAS</div>
+    <div class="derived-val" id="i-ltvroas">—<span class="calc-badge">derived</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
-      <div class="out-top"><span class="out-val" id="o-ref">—</span><div class="out-deltas"><span class="ddol" id="dd-ref"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">% of orders</span><div class="imp-wrap"><input type="number" class="imp" id="p-ref" value="5" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
-      <div class="attr">Referral program (Okendo) + post-purchase flows</div>
+      <div class="out-top"><span class="out-val" id="o-ltvroas">—</span><div class="out-deltas"><span class="dpct" id="dp-ltvroas"></span></div></div>
+      <div class="attr">LTV × ROAS ÷ AOV &nbsp;·&nbsp; <span id="ltvroas-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
     </div>
   </div>
 
@@ -299,29 +328,47 @@ input.imp:focus{border-color:var(--purple)}
   </div>
 </div>
 
-<!-- STRIP -->
+<!-- STRIP — 4 cards -->
 <div class="strip">
-  <div class="sc"><div class="sl">Extra revenue / month</div><div class="sv" id="s-mo">—</div><div class="ss">vs. current baseline</div></div>
-  <div class="sc"><div class="sl">ROI on Vitalevo fee</div><div class="sv" id="s-roi">—</div><div class="ss">at $1,800/mo</div></div>
-  <div class="sc"><div class="sl">Annual impact</div><div class="sv" id="s-yr">—</div><div class="ss">projected 12-month gain</div></div>
+  <div class="sc">
+    <div class="sl">ROI on Vitalevo fee</div>
+    <div class="sv" id="s-roi">—</div>
+    <div class="ss">at $1,800/mo</div>
+  </div>
+  <div class="sc">
+    <div class="sl">Extra revenue / month</div>
+    <div class="sv" id="s-mo">—</div>
+    <div class="ss">vs. current baseline</div>
+  </div>
+  <div class="sc">
+    <div class="sl">Annual impact</div>
+    <div class="sv" id="s-yr">—</div>
+    <div class="ss">projected 12-month gain</div>
+  </div>
+  <div class="sc sc-accent">
+    <div class="sl">LTV-Adj. ROAS</div>
+    <div class="sv" id="s-ltvroas">—</div>
+    <div class="ss" id="s-ltvroas-sub">projected lifetime return</div>
+  </div>
 </div>
 
-<p class="note">Projections are estimates based on the improvement percentages above. Actual results vary by brand, market, and execution.<br>Baseline documented in writing during week 1 of onboarding.</p>
+<p class="note">Projections use conservative multipliers — AOV lift applied to 40% of orders (upsells + add-ons + bundles); CVR gains applied to 50% of cold traffic only.<br>Actual results vary by brand, market, and execution. Baseline documented in writing during week 1 of onboarding.</p>
 
 </div>
 <script>
-const DEFS={roas:3.2,cvr:0.5,aov:8,subs:20,churn:30,ref:5,ads:0};
+const DEFS={roas:2.5,cvr:2.0,aov:15,subs:20,churn:30,ref:5,ads:0};
 function resetDefaults(){Object.entries(DEFS).forEach(([k,v])=>{document.getElementById('p-'+k).value=v});calc()}
 
 const f$=n=>{n=Math.round(n);if(Math.abs(n)>=1e6)return'$'+(n/1e6).toFixed(1)+'M';if(Math.abs(n)>=1e3)return'$'+(n/1e3).toFixed(1)+'K';return'$'+n};
-const fX=n=>n.toFixed(2)+'x';
+const fX2=n=>n.toFixed(2)+'x';
+const fX1=n=>n.toFixed(1)+'x';
 const fP=n=>n.toFixed(1)+'%';
 const fN=n=>Math.round(n).toLocaleString();
 
 function row(valId,val,pctId,pctStr,dolId,dolStr){
-  document.getElementById(valId).textContent=val;
-  if(pctId){const e=document.getElementById(pctId);e.textContent=pctStr||'';e.style.color=pctStr?'var(--green)':''}
-  if(dolId){const e=document.getElementById(dolId);e.textContent=dolStr||'';e.style.color=dolStr?'var(--green)':''}
+  const ve=document.getElementById(valId);if(ve)ve.textContent=val;
+  if(pctId){const e=document.getElementById(pctId);if(e){e.textContent=pctStr||'';e.style.color=pctStr?'var(--green)':''}}
+  if(dolId){const e=document.getElementById(dolId);if(e){e.textContent=dolStr||'';e.style.color=dolStr?'var(--green)':''}}
 }
 
 function calc(){
@@ -343,51 +390,107 @@ function calc(){
   const pRef  =+document.getElementById('p-ref').value||0;
   const pAds  =+document.getElementById('p-ads').value||0;
 
-  const orders = aov>0 ? rev/aov : 0;
-  const traffic = cvr>0 ? orders/(cvr/100) : 0;
+  // ── Derived current state ──────────────────────────────────────────
+  const totalOrders    = aov > 0 ? rev / aov : 0;
+  const subRevenue     = subs * aov;
+  const nonSubRevenue  = Math.max(0, rev - subRevenue);
+  const nonSubOrders   = aov > 0 ? nonSubRevenue / aov : 0;
+  const nonSubTraffic  = cvr > 0 ? nonSubOrders / (cvr / 100) : 0;
 
+  // ── Projected values ───────────────────────────────────────────────
   const newAds   = ads + pAds;
   const newRoas  = pRoas > 0 ? pRoas : roas;
-  const newCvr   = cvr + pCvr;
-  const newAov   = aov * (1 + pAov/100);
-  const newSubs  = subs * (1 + pSubs/100);
-  const newChurn = churn * (1 - pChurn/100);
-  // LTV = AOV / monthly_churn_rate — calculated, not user-set
-  const newLtv   = newChurn > 0 ? newAov / (newChurn/100) : ltv;
-  const currentLtv = churn > 0 ? aov / (churn/100) : ltv;
+  const newCvr   = pCvr  > 0 ? pCvr  : cvr;
+  const newAov   = aov * (1 + pAov / 100);
+  const newSubs  = subs * (1 + pSubs / 100);
+  const newChurn = churn * (1 - pChurn / 100);
+  const currentDerivedLtv = churn > 0 ? aov / (churn / 100) : ltv;
+  const newLtv   = newChurn > 0 ? newAov / (newChurn / 100) : ltv;
 
-  const roasGain  = (newRoas - roas) * newAds;
-  const newOrders = traffic * (newCvr/100);
-  const cvrGain   = (newOrders - orders) * newAov;
-  const aovGain   = orders * (newAov - aov);
-  const subsGain  = (newSubs - subs) * newAov;
-  const churnGain = subs * ((churn - newChurn)/100) * newAov;
-  const ltvGain   = (newLtv - currentLtv) * (subs/12);
-  const newRef    = ref + (orders * (pRef/100) * newAov);
-  const refGain   = newRef - ref;
+  // ── Gains ─────────────────────────────────────────────────────────
 
-  const totalGain = roasGain+cvrGain+aovGain+subsGain+churnGain+ltvGain+refGain;
-  const totalNew  = rev+totalGain;
-  const roi       = totalGain>0?totalGain/1800:0;
+  // 1. ROAS — purely ad performance (creative + targeting)
+  const roasGain = (newRoas - roas) * newAds;
+
+  // 2. CVR — 50% of non-sub traffic (cold/new visitors only, conservative)
+  const coldTraffic       = nonSubTraffic * 0.5;
+  const currentColdOrders = coldTraffic * (cvr / 100);
+  const newColdOrders     = coldTraffic * (newCvr / 100);
+  const cvrGain           = (newColdOrders - currentColdOrders) * aov;
+
+  // 3. AOV — 40% of orders (post-purchase upsells ~15% + sub add-ons ~15% + bundles ~10%)
+  const aovGain = totalOrders * 0.4 * (newAov - aov);
+
+  // 4. Subscriber growth — new subs × new AOV
+  const subsGain = (newSubs - subs) * newAov;
+
+  // 5. Churn reduction — retained subs × new AOV (monthly cash impact)
+  const churnGain = subs * ((churn - newChurn) / 100) * newAov;
+
+  // 6. Referral — net gain over existing referral revenue
+  const newRefRevenue = totalOrders * (pRef / 100) * newAov;
+  const refGain       = Math.max(0, newRefRevenue - ref);
+
+  // 7. LTV ROAS — informational only, NOT added to monthly total
+  //    Scale user-input LTV by the same ratio as the derived subscription LTV improves
+  const ltvScale           = currentDerivedLtv > 0 ? newLtv / currentDerivedLtv : 1;
+  const scaledProjectedLtv = ltv * ltvScale;
+  const currentLtvRoas     = (ltv > 0 && aov > 0 && roas > 0) ? (ltv * roas) / aov : 0;
+  const projectedLtvRoas   = (scaledProjectedLtv > 0 && newAov > 0 && newRoas > 0) ? (scaledProjectedLtv * newRoas) / newAov : 0;
+
+  // ── Totals ─────────────────────────────────────────────────────────
+  const totalGain = roasGain + cvrGain + aovGain + subsGain + churnGain + refGain;
+  const totalNew  = rev + totalGain;
+  const roi       = totalGain > 0 ? totalGain / 1800 : 0;
+
+  // ── Update UI ──────────────────────────────────────────────────────
 
   const roasDelta = newRoas - roas;
-  row('o-roas', fX(newRoas),  'dp-roas', roasDelta>0?'+'+roasDelta.toFixed(1)+'x':'', 'dd-roas', roasGain>0?'+'+f$(roasGain):'');
-  row('o-cvr',  fP(newCvr),   'dp-cvr', pCvr?'+'+pCvr+'%':'',   'dd-cvr', cvrGain>0?'+'+f$(cvrGain):'');
-  row('o-aov',  f$(newAov),   'dp-aov', pAov?'+'+pAov+'%':'',     'dd-aov', aovGain>0?'+'+f$(aovGain):'');
-  row('o-subs', fN(newSubs)+' subs','dp-subs',pSubs?'+'+pSubs+'%':'', 'dd-subs',subsGain>0?'+'+f$(subsGain):'');
-  row('o-churn',fP(newChurn), 'dp-churn',pChurn?'-'+pChurn+'%':'','dd-churn',churnGain>0?'+'+f$(churnGain):'');
-  row('o-ltv',  f$(newLtv),   'dp-ltv', newLtv>currentLtv?'+'+Math.round(((newLtv-currentLtv)/currentLtv)*100)+'%':'', 'dd-ltv', ltvGain>0?'+'+f$(ltvGain):'');
-  const ltvFormulaEl = document.getElementById('ltv-formula');
-  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(newAov)+' ÷ '+newChurn.toFixed(1)+'% = '+f$(newLtv);
-  row('o-ref',  f$(newRef),   null,'',                             'dd-ref', refGain>0?'+'+f$(refGain):'');
-  row('o-ads',  f$(newAds),   'dp-ads', pAds?'+'+f$(pAds):'',     'dd-ads', pAds>0?'+'+f$(pAds*newRoas)+' rev':'');
+  row('o-roas', fX2(newRoas), 'dp-roas', roasDelta>0?'+'+roasDelta.toFixed(1)+'x':'', 'dd-roas', roasGain>0?'+'+f$(roasGain):'');
 
-  document.getElementById('t-cur').textContent=f$(rev);
-  document.getElementById('t-new').textContent=f$(totalNew);
-  document.getElementById('t-sub').textContent=totalGain>0?'+'+f$(totalGain)+'/mo vs. now':'With the full system';
-  document.getElementById('s-mo').textContent=totalGain>0?'+'+f$(totalGain):f$(totalGain);
-  document.getElementById('s-roi').textContent=roi.toFixed(1)+'x';
-  document.getElementById('s-yr').textContent=totalGain>0?'+'+f$(totalGain*12):f$(totalGain*12);
+  const cvrDelta = newCvr - cvr;
+  row('o-cvr', fP(newCvr), 'dp-cvr', cvrDelta>0?'+'+cvrDelta.toFixed(1)+'pp':'', 'dd-cvr', cvrGain>0?'+'+f$(cvrGain):'');
+
+  row('o-aov', f$(newAov), 'dp-aov', pAov?'+'+pAov+'%':'', 'dd-aov', aovGain>0?'+'+f$(aovGain):'');
+
+  row('o-subs', fN(newSubs)+' subs', 'dp-subs', pSubs?'+'+pSubs+'%':'', 'dd-subs', subsGain>0?'+'+f$(subsGain):'');
+
+  row('o-churn', fP(newChurn), 'dp-churn', pChurn?'-'+pChurn+'%':'', 'dd-churn', churnGain>0?'+'+f$(churnGain):'');
+
+  // LTV — scaled by AOV improvement only (honest: AOV is the only direct lever on blended LTV)
+  const projectedLtv  = ltv * (newAov / aov);
+  const ltvPctDelta   = ltv > 0 ? Math.round(((projectedLtv - ltv) / ltv) * 100) : 0;
+  row('o-ltv', f$(projectedLtv), 'dp-ltv', ltvPctDelta > 0 ? '+'+ltvPctDelta+'%' : '', null, '');
+  const ltvFormulaEl = document.getElementById('ltv-formula');
+  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(ltv)+' × ('+f$(newAov)+' ÷ '+f$(aov)+') = '+f$(projectedLtv);
+
+  // LTV ROAS (derived, both sides)
+  const ltvRoasEl = document.getElementById('i-ltvroas');
+  if(ltvRoasEl) ltvRoasEl.innerHTML = (currentLtvRoas > 0 ? fX1(currentLtvRoas) : '—')+'<span class="calc-badge">derived</span>';
+  const ltvRoasDelta = projectedLtvRoas - currentLtvRoas;
+  row('o-ltvroas', projectedLtvRoas > 0 ? fX1(projectedLtvRoas) : '—', 'dp-ltvroas', ltvRoasDelta > 0 ? '+'+ltvRoasDelta.toFixed(1)+'x' : '', null, '');
+  const ltvRoasFormulaEl = document.getElementById('ltvroas-formula');
+  if(ltvRoasFormulaEl) ltvRoasFormulaEl.textContent = f$(Math.round(scaledProjectedLtv))+' × '+newRoas.toFixed(1)+'x ÷ '+f$(Math.round(newAov))+' = '+fX1(projectedLtvRoas);
+
+  // Referral
+  const newRefTotal = ref + refGain;
+  row('o-ref', f$(newRefTotal), null, '', 'dd-ref', refGain > 0 ? '+'+f$(refGain) : '');
+
+  // Ad Spend
+  row('o-ads', f$(newAds), 'dp-ads', pAds ? '+'+f$(pAds) : '', 'dd-ads', pAds > 0 ? '+'+f$(pAds*newRoas)+' rev' : '');
+
+  // Totals
+  document.getElementById('t-cur').textContent = f$(rev);
+  document.getElementById('t-new').textContent = f$(totalNew);
+  document.getElementById('t-sub').textContent = totalGain > 0 ? '+'+f$(totalGain)+'/mo vs. now' : 'With the full system';
+
+  // Strip
+  document.getElementById('s-mo').textContent  = totalGain > 0 ? '+'+f$(totalGain) : f$(totalGain);
+  document.getElementById('s-roi').textContent = roi.toFixed(1)+'x';
+  document.getElementById('s-yr').textContent  = totalGain > 0 ? '+'+f$(totalGain*12) : f$(totalGain*12);
+  document.getElementById('s-ltvroas').textContent = projectedLtvRoas > 0 ? fX1(projectedLtvRoas) : '—';
+  const ltvRoasSubEl = document.getElementById('s-ltvroas-sub');
+  if(ltvRoasSubEl) ltvRoasSubEl.textContent = currentLtvRoas > 0 ? 'vs '+fX1(currentLtvRoas)+' current' : 'projected lifetime return';
 }
 calc();
 </script>
