@@ -330,7 +330,7 @@ input.imp:focus{border-color:var(--purple)}
 </div>
 
 <!-- DECISION ROW -->
-<div class="totals" style="margin-bottom:1rem">
+<div class="totals" style="margin-bottom:0.5rem">
   <div class="tbox" style="background:#fff5f5;border:0.5px solid rgba(220,38,38,0.2);margin:0 8px">
     <div class="tlabel" style="color:#DC2626">Without Vitalevo</div>
     <div class="tval" id="d-loss" style="color:#DC2626">—</div>
@@ -341,6 +341,40 @@ input.imp:focus{border-color:var(--purple)}
     <div class="tlabel" style="color:#16A34A">After Vitalevo fee</div>
     <div class="tval" id="d-net" style="color:#16A34A">—</div>
     <div class="tsub" style="color:#16A34A;opacity:0.7">net monthly gain after $1,800</div>
+  </div>
+</div>
+
+<!-- SUBTLE TOGGLE -->
+<div style="text-align:center;margin-bottom:1rem">
+  <button onclick="toggleBreakdown()" id="breakdown-toggle" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(107,114,128,0.5);letter-spacing:0.05em;padding:4px 8px;display:inline-flex;align-items:center;gap:4px">
+    <span id="breakdown-arrow" style="font-size:8px;transition:transform 0.2s">▸</span>
+    <span>full cost breakdown</span>
+  </button>
+</div>
+
+<!-- HIDDEN BREAKDOWN CARD -->
+<div id="breakdown-card" style="display:none;margin-bottom:1.25rem;background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow:hidden">
+  <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:0">
+
+    <!-- LEFT: Excluding ad spend -->
+    <div style="padding-right:1.5rem;text-align:center">
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">Excluding ad spend</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:0.75rem;font-style:italic">Fee + tools + UGC = $2,548/mo</div>
+      <div style="font-size:26px;font-weight:900;letter-spacing:-0.02em" id="bd-net-excl">—</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">net monthly gain</div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div style="background:var(--border)"></div>
+
+    <!-- RIGHT: All-in -->
+    <div style="padding-left:1.5rem;text-align:center">
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">All-in</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:0.75rem;font-style:italic">Including ad spend</div>
+      <div style="font-size:26px;font-weight:900;letter-spacing:-0.02em" id="bd-net-allin">—</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">net monthly gain</div>
+    </div>
+
   </div>
 </div>
 
@@ -514,6 +548,24 @@ function calc(){
   const netEl  = document.getElementById('d-net');
   if(lossEl) lossEl.textContent = totalGain > 0 ? '-'+f$(totalGain) : '—';
   if(netEl)  netEl.textContent  = totalGain > 0 ? (netGain > 0 ? '+'+f$(netGain) : f$(netGain)) : '—';
+
+  // Breakdown card
+  const fixedTools = 1800 + 99 + 99 + 100 + 450;
+  const adSpendVal = ads > 0 ? ads : 0;
+  const netExcl = totalGain - fixedTools;
+  const netAllin = totalGain - fixedTools - adSpendVal;
+  const bdNetExcl = document.getElementById('bd-net-excl');
+  const bdNetAllin = document.getElementById('bd-net-allin');
+  if(bdNetExcl){ bdNetExcl.textContent = totalGain > 0 ? (netExcl >= 0 ? '+'+f$(netExcl) : f$(netExcl)) : '—'; bdNetExcl.style.color = netExcl >= 0 ? '#16A34A' : '#DC2626'; }
+  if(bdNetAllin){ bdNetAllin.textContent = totalGain > 0 ? (netAllin >= 0 ? '+'+f$(netAllin) : f$(netAllin)) : '—'; bdNetAllin.style.color = netAllin >= 0 ? '#16A34A' : '#DC2626'; }
+}
+
+function toggleBreakdown(){
+  const card = document.getElementById('breakdown-card');
+  const arrow = document.getElementById('breakdown-arrow');
+  const visible = card.style.display !== 'none';
+  card.style.display = visible ? 'none' : 'block';
+  arrow.style.transform = visible ? '' : 'rotate(90deg)';
 }
 calc();
 </script>
