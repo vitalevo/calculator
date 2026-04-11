@@ -181,7 +181,7 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: Monthly Revenue -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Revenue</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-rev" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-rev" value="" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r" style="visibility:hidden">
@@ -191,13 +191,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: ROAS -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>ROAS</div>
-    <div class="iw"><input type="number" id="i-roas" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">x</span></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-roas" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">x</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-roas">—</span><div class="out-deltas"><span class="dpct" id="dp-roas"></span><span class="ddol" id="dd-roas"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">Target ROAS</span><div class="imp-wrap"><input type="number" class="imp" id="p-roas" value="" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">x</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Target ROAS</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-roas" value="" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">x</span></div></div>
       <div class="attr">Better creative, hooks, and audience targeting</div>
     </div>
   </div>
@@ -205,13 +205,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: CVR -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Conversion Rate</div>
-    <div class="iw"><input type="number" id="i-cvr" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-cvr" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-cvr">—</span><div class="out-deltas"><span class="dpct" id="dp-cvr"></span><span class="ddol" id="dd-cvr"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">Target CVR</span><div class="imp-wrap"><input type="number" class="imp" id="p-cvr" value="" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Target CVR</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-cvr" value="" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Reviews on PDPs + checkout optimization + mobile UX + ad-to-page alignment</div>
     </div>
   </div>
@@ -219,13 +219,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: AOV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Avg Order Value</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-aov" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-aov" value="" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-aov">—</span><div class="out-deltas"><span class="dpct" id="dp-aov"></span><span class="ddol" id="dd-aov"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+% lift</span><div class="imp-wrap"><input type="number" class="imp" id="p-aov" value="" step="1" min="0" max="100" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">+% lift</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-aov" value="" step="1" min="0" max="100" oninput="calc()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Post-purchase upsells, subscription add-ons &amp; bundles — applied to ~40% of orders</div>
     </div>
   </div>
@@ -233,13 +233,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: Subscribers -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Active Subscribers</div>
-    <div class="iw"><input type="number" id="i-subs" value="" min="0" class="np" oninput="calc()"></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-subs" value="" min="0" class="np" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-subs">—</span><div class="out-deltas"><span class="dpct" id="dp-subs"></span><span class="ddol" id="dd-subs"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+% growth</span><div class="imp-wrap"><input type="number" class="imp" id="p-subs" value="" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">+% growth</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-subs" value="" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Subscription prompts + post-purchase offers + bundle incentives</div>
     </div>
   </div>
@@ -247,13 +247,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: Referral -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Referral Revenue</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ref" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ref" value="" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-ref">—</span><div class="out-deltas"><span class="ddol" id="dd-ref"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">% of orders</span><div class="imp-wrap"><input type="number" class="imp" id="p-ref" value="" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">% of orders</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-ref" value="" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Referral program (Okendo) + post-purchase flows</div>
     </div>
   </div>
@@ -261,13 +261,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: Churn -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Churn Rate</div>
-    <div class="iw"><input type="number" id="i-churn" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-churn" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-churn">—</span><div class="out-deltas"><span class="dpct" id="dp-churn"></span><span class="ddol" id="dd-churn"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">% reduction</span><div class="imp-wrap"><input type="number" class="imp" id="p-churn" value="" step="1" min="0" max="99" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">% reduction</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-churn" value="" step="1" min="0" max="99" oninput="calc()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Save flows + loyalty program + subscription lock-in</div>
     </div>
   </div>
@@ -275,7 +275,7 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: LTV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Customer LTV</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ltv" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ltv" value="" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
@@ -301,13 +301,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: Ad Spend -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Ad Spend</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" id="i-ads" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ads" value="" min="0" oninput="calc()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-ads">—</span><div class="out-deltas"><span class="dpct" id="dp-ads"></span><span class="ddol" id="dd-ads"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+$ increase</span><div class="imp-wrap"><input type="number" class="imp" id="p-ads" value="0" step="100" min="0" oninput="calc()"><span class="imp-sfx">$</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">+$ increase</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-ads" value="" step="100" min="0" oninput="calc()"><span class="imp-sfx">$</span></div></div>
       <div class="attr">Your call — increase only when ROAS justifies it</div>
     </div>
   </div>
@@ -326,6 +326,21 @@ input.imp:focus{border-color:var(--purple)}
     <div class="tlabel">Projected monthly revenue</div>
     <div class="tval" id="t-new">—</div>
     <div class="tsub" id="t-sub">With the full system</div>
+  </div>
+</div>
+
+<!-- DECISION ROW -->
+<div class="totals" style="margin-bottom:1rem">
+  <div class="tbox" style="background:#fff5f5;border:0.5px solid rgba(220,38,38,0.2);margin:0 8px">
+    <div class="tlabel" style="color:#DC2626">Without Vitalevo</div>
+    <div class="tval" id="d-loss" style="color:#DC2626">—</div>
+    <div class="tsub" style="color:#DC2626;opacity:0.7">left on the table every month</div>
+  </div>
+  <div class="tmid"><div class="vs">VS</div></div>
+  <div class="tbox" style="background:#f0fdf4;border:0.5px solid rgba(22,163,74,0.2);margin:0 8px">
+    <div class="tlabel" style="color:#16A34A">After Vitalevo fee</div>
+    <div class="tval" id="d-net" style="color:#16A34A">—</div>
+    <div class="tsub" style="color:#16A34A;opacity:0.7">net monthly gain after $1,800</div>
   </div>
 </div>
 
@@ -492,6 +507,13 @@ function calc(){
   document.getElementById('s-ltvroas').textContent = projectedLtvRoas > 0 ? fX1(projectedLtvRoas) : '—';
   const ltvRoasSubEl = document.getElementById('s-ltvroas-sub');
   if(ltvRoasSubEl) ltvRoasSubEl.textContent = currentLtvRoas > 0 ? 'vs '+fX1(currentLtvRoas)+' current' : 'projected lifetime return';
+
+  // Decision row
+  const netGain = totalGain - 1800;
+  const lossEl = document.getElementById('d-loss');
+  const netEl  = document.getElementById('d-net');
+  if(lossEl) lossEl.textContent = totalGain > 0 ? '-'+f$(totalGain) : '—';
+  if(netEl)  netEl.textContent  = totalGain > 0 ? (netGain > 0 ? '+'+f$(netGain) : f$(netGain)) : '—';
 }
 calc();
 </script>
