@@ -301,13 +301,13 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: LTV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Customer LTV</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ltv" value="" min="0" oninput="calc()" onwheel="this.blur()"></div>
+    <div class="derived-val" id="i-ltv">—<span class="calc-badge">derived</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-ltv">—</span><div class="out-deltas"><span class="dpct" id="dp-ltv"></span></div></div>
-      <div class="attr">Your LTV scales with AOV — higher order value = more revenue per customer &nbsp;·&nbsp; <span id="ltv-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
+      <div class="attr">LTV = AOV ÷ churn rate — lower churn and higher order value both extend it &nbsp;·&nbsp; <span id="ltv-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
     </div>
   </div>
 
@@ -459,7 +459,6 @@ function calc(){
   const aov  =+document.getElementById('i-aov').value||0;
   const subs =+document.getElementById('i-subs').value||0;
   const churn=+document.getElementById('i-churn').value||0;
-  const ltv  =+document.getElementById('i-ltv').value||0;
   const ref  =+document.getElementById('i-ref').value||0;
   const ads  =+document.getElementById('i-ads').value||0;
 
@@ -483,8 +482,10 @@ function calc(){
   const newAov   = aov * (1 + pAov / 100);
   const newSubs  = subs * (1 + pSubs / 100);
   const newChurn = churn * (1 - pChurn / 100);
-  const currentDerivedLtv = churn > 0 ? aov / (churn / 100) : ltv;
-  const newLtv   = newChurn > 0 ? newAov / (newChurn / 100) : ltv;
+  const currentLtv         = churn > 0 && aov > 0 ? aov / (churn / 100) : 0;
+  const projectedLtv       = newChurn > 0 && newAov > 0 ? newAov / (newChurn / 100) : 0;
+  const currentLtvRoas     = (currentLtv > 0 && aov > 0 && roas > 0) ? (currentLtv * roas) / aov : 0;
+  const projectedLtvRoas   = (projectedLtv > 0 && newAov > 0 && newRoas > 0) ? (projectedLtv * newRoas) / newAov : 0;
 
   const roasGain = (newRoas - roas) * newAds;
   const coldTraffic       = nonSubTraffic * 0.5;
@@ -496,10 +497,6 @@ function calc(){
   const churnGain = subs * ((churn - newChurn) / 100) * newAov;
   const newRefRevenue = totalOrders * (pRef / 100) * newAov;
   const refGain       = Math.max(0, newRefRevenue - ref);
-  const ltvScale           = currentDerivedLtv > 0 ? newLtv / currentDerivedLtv : 1;
-  const scaledProjectedLtv = ltv * ltvScale;
-  const currentLtvRoas     = (ltv > 0 && aov > 0 && roas > 0) ? (ltv * roas) / aov : 0;
-  const projectedLtvRoas   = (scaledProjectedLtv > 0 && newAov > 0 && newRoas > 0) ? (scaledProjectedLtv * newRoas) / newAov : 0;
 
   const totalGain = roasGain + cvrGain + aovGain + subsGain + churnGain + refGain;
   const totalNew  = rev + totalGain;
@@ -513,18 +510,19 @@ function calc(){
   row('o-subs', fN(newSubs)+' subs', 'dp-subs', pSubs?'+'+pSubs+'%':'', 'dd-subs', subsGain>0?'+'+f$(subsGain):'');
   row('o-churn', fP(newChurn), 'dp-churn', pChurn?'-'+pChurn+'%':'', 'dd-churn', churnGain>0?'+'+f$(churnGain):'');
 
-  const projectedLtv  = ltv * (newAov / aov);
-  const ltvPctDelta   = ltv > 0 ? Math.round(((projectedLtv - ltv) / ltv) * 100) : 0;
-  row('o-ltv', f$(projectedLtv), 'dp-ltv', ltvPctDelta > 0 ? '+'+ltvPctDelta+'%' : '', null, '');
+  const ltvEl = document.getElementById('i-ltv');
+  if(ltvEl) ltvEl.innerHTML = (currentLtv > 0 ? f$(currentLtv) : '—')+'<span class="calc-badge">derived</span>';
+  const ltvPctDelta = currentLtv > 0 ? Math.round(((projectedLtv - currentLtv) / currentLtv) * 100) : 0;
+  row('o-ltv', projectedLtv > 0 ? f$(projectedLtv) : '—', 'dp-ltv', ltvPctDelta > 0 ? '+'+ltvPctDelta+'%' : '', null, '');
   const ltvFormulaEl = document.getElementById('ltv-formula');
-  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(ltv)+' × ('+f$(newAov)+' ÷ '+f$(aov)+') = '+f$(projectedLtv);
+  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(newAov)+' ÷ '+fP(newChurn)+' = '+(projectedLtv > 0 ? f$(projectedLtv) : '—');
 
   const ltvRoasEl = document.getElementById('i-ltvroas');
   if(ltvRoasEl) ltvRoasEl.innerHTML = (currentLtvRoas > 0 ? fX1(currentLtvRoas) : '—')+'<span class="calc-badge">derived</span>';
   const ltvRoasDelta = projectedLtvRoas - currentLtvRoas;
   row('o-ltvroas', projectedLtvRoas > 0 ? fX1(projectedLtvRoas) : '—', 'dp-ltvroas', ltvRoasDelta > 0 ? '+'+ltvRoasDelta.toFixed(1)+'x' : '', null, '');
   const ltvRoasFormulaEl = document.getElementById('ltvroas-formula');
-  if(ltvRoasFormulaEl) ltvRoasFormulaEl.textContent = f$(Math.round(scaledProjectedLtv))+' × '+newRoas.toFixed(1)+'x ÷ '+f$(Math.round(newAov))+' = '+fX1(projectedLtvRoas);
+  if(ltvRoasFormulaEl) ltvRoasFormulaEl.textContent = f$(Math.round(projectedLtv))+' × '+newRoas.toFixed(1)+'x ÷ '+f$(Math.round(newAov))+' = '+fX1(projectedLtvRoas);
 
   const newRefTotal = ref + refGain;
   row('o-ref', f$(newRefTotal), null, '', 'dd-ref', refGain > 0 ? '+'+f$(refGain) : '');
