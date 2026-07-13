@@ -322,7 +322,7 @@ input.imp:focus{border-color:var(--purple)}
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-ltvroas">—</span><div class="out-deltas"><span class="dpct" id="dp-ltvroas"></span></div></div>
-      <div class="attr">LTV × ROAS ÷ AOV &nbsp;·&nbsp; <span id="ltvroas-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
+      <div class="attr">LTV × ROAS / AOV &nbsp;·&nbsp; <span id="ltvroas-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
     </div>
   </div>
 
@@ -517,12 +517,12 @@ function calc(){
 
   const ltvHintEl = document.getElementById('ltv-hint');
   if(ltvHintEl) ltvHintEl.textContent = estimatedLtv > 0
-    ? (ltv > 0 ? 'AOV ÷ churn estimate: '+f$(estimatedLtv) : 'No LTV entered — using AOV ÷ churn estimate: '+f$(estimatedLtv))
+    ? (ltv > 0 ? 'AOV / churn estimate: '+f$(estimatedLtv) : 'No LTV entered, using AOV / churn estimate: '+f$(estimatedLtv))
     : "Use the client's real number if they have one";
   const ltvPctDelta = currentLtv > 0 ? Math.round(((projectedLtv - currentLtv) / currentLtv) * 100) : 0;
   row('o-ltv', projectedLtv > 0 ? f$(projectedLtv) : '—', 'dp-ltv', ltvPctDelta > 0 ? '+'+ltvPctDelta+'%' : '', null, '');
   const ltvFormulaEl = document.getElementById('ltv-formula');
-  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(currentLtv)+' × ('+f$(newAov)+'÷'+f$(aov)+' AOV, '+fP(churn)+'÷'+fP(newChurn)+' churn) = '+(projectedLtv > 0 ? f$(projectedLtv) : '—');
+  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(currentLtv)+' × ('+f$(newAov)+'/'+f$(aov)+' AOV, '+fP(churn)+'/'+fP(newChurn)+' churn) = '+(projectedLtv > 0 ? f$(projectedLtv) : '—');
 
 
   const ltvRoasEl = document.getElementById('i-ltvroas');
@@ -530,7 +530,7 @@ function calc(){
   const ltvRoasDelta = projectedLtvRoas - currentLtvRoas;
   row('o-ltvroas', projectedLtvRoas > 0 ? fX1(projectedLtvRoas) : '—', 'dp-ltvroas', ltvRoasDelta > 0 ? '+'+ltvRoasDelta.toFixed(1)+'x' : '', null, '');
   const ltvRoasFormulaEl = document.getElementById('ltvroas-formula');
-  if(ltvRoasFormulaEl) ltvRoasFormulaEl.textContent = f$(Math.round(projectedLtv))+' × '+newRoas.toFixed(1)+'x ÷ '+f$(Math.round(newAov))+' = '+fX1(projectedLtvRoas);
+  if(ltvRoasFormulaEl) ltvRoasFormulaEl.textContent = f$(Math.round(projectedLtv))+' × '+newRoas.toFixed(1)+'x / '+f$(Math.round(newAov))+' = '+fX1(projectedLtvRoas);
 
   const newRefTotal = ref + refGain;
   row('o-ref', f$(newRefTotal), null, '', 'dd-ref', refGain > 0 ? '+'+f$(refGain) : '');
