@@ -123,9 +123,29 @@ input.imp:focus{border-color:var(--purple)}
 .attr{font-size:12px;color:var(--muted);padding:5px 12px;background:rgba(150,32,255,0.03);border-top:0.5px solid rgba(150,32,255,0.08);line-height:1.4;font-style:italic}
 
 /* RESET */
-.reset-row{display:flex;justify-content:flex-end;margin-bottom:10px}
+.reset-row{display:flex;justify-content:flex-end;align-items:center;margin-bottom:10px}
 .reset-btn{font-size:13px;font-weight:500;color:var(--muted);background:none;border:0.5px solid var(--border);border-radius:5px;padding:4px 10px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .reset-btn:hover{color:var(--purple);border-color:var(--pb)}
+
+/* FEE CONTROL */
+.fee-row{display:flex;align-items:center;justify-content:flex-end;gap:8px;width:100%;padding:4px 0}
+.fee-label{font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple);white-space:nowrap}
+.fee-iw{position:relative;width:110px}
+.fee-input{height:34px !important;font-size:14px !important;font-weight:700 !important;border:0.5px solid var(--pb) !important;background:var(--pl) !important;padding:0 12px 0 24px !important}
+.fee-iw .pfx{left:9px;font-size:14px}
+.fee-per{font-size:12px;color:var(--muted)}
+
+/* PILLAR TAGS */
+.mc-r{display:flex;flex-direction:row;align-items:flex-start;gap:6px}
+.out-card{flex:1;min-width:0}
+.pillar-tag{
+  flex-shrink:0;width:60px;margin-top:0;
+  text-align:center;font-size:9px;font-weight:700;letter-spacing:0.02em;text-transform:uppercase;
+  padding:6px 3px;border-radius:6px;line-height:1.25;
+}
+.pillar-tag.paid{background:rgba(37,99,235,0.09);color:#2563EB}
+.pillar-tag.cro{background:rgba(217,119,6,0.1);color:#D97706}
+.pillar-tag.retention{background:rgba(22,163,74,0.1);color:#16A34A}
 
 /* TOTALS */
 .totals{display:grid;grid-template-columns:1fr 28px 1fr;margin-bottom:1.25rem;gap:0}
@@ -181,7 +201,7 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: Monthly Revenue -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Revenue</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-rev" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-rev" value="" min="0" oninput="calc()" onwheel="this.blur()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r" style="visibility:hidden">
@@ -191,91 +211,97 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: ROAS -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>ROAS</div>
-    <div class="iw"><input type="number" autocomplete="off" id="i-roas" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">x</span></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-roas" value="" step="0.1" min="0" class="np" oninput="calc()" onwheel="this.blur()"><span class="sfx">x</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
-    <div class="out-card">
+    <div class="out-card has-tag">
       <div class="out-top"><span class="out-val" id="o-roas">—</span><div class="out-deltas"><span class="dpct" id="dp-roas"></span><span class="ddol" id="dd-roas"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">Target ROAS</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-roas" value="" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">x</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Target ROAS</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-roas" value="" step="0.1" min="0" oninput="calc()" onwheel="this.blur()"><span class="imp-sfx">x</span></div></div>
       <div class="attr">Better creative, hooks, and audience targeting</div>
     </div>
+    <div class="pillar-tag paid">Paid Media</div>
   </div>
 
   <!-- ROW: CVR -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Conversion Rate</div>
-    <div class="iw"><input type="number" autocomplete="off" id="i-cvr" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-cvr" value="" step="0.1" min="0" class="np" oninput="calc()" onwheel="this.blur()"><span class="sfx">%</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
-    <div class="out-card">
+    <div class="out-card has-tag">
       <div class="out-top"><span class="out-val" id="o-cvr">—</span><div class="out-deltas"><span class="dpct" id="dp-cvr"></span><span class="ddol" id="dd-cvr"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">Target CVR</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-cvr" value="" step="0.1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">Target CVR</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-cvr" value="" step="0.1" min="0" oninput="calc()" onwheel="this.blur()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Reviews on PDPs + checkout optimization + mobile UX + ad-to-page alignment</div>
     </div>
+    <div class="pillar-tag cro">CRO</div>
   </div>
 
   <!-- ROW: AOV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Avg Order Value</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-aov" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-aov" value="" min="0" oninput="calc()" onwheel="this.blur()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
-    <div class="out-card">
+    <div class="out-card has-tag">
       <div class="out-top"><span class="out-val" id="o-aov">—</span><div class="out-deltas"><span class="dpct" id="dp-aov"></span><span class="ddol" id="dd-aov"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+% lift</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-aov" value="" step="1" min="0" max="100" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">+% lift</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-aov" value="" step="1" min="0" max="100" oninput="calc()" onwheel="this.blur()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Post-purchase upsells, subscription add-ons &amp; bundles — applied to ~40% of orders</div>
     </div>
+    <div class="pillar-tag cro">CRO</div>
   </div>
 
   <!-- ROW: Subscribers -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Active Subscribers</div>
-    <div class="iw"><input type="number" autocomplete="off" id="i-subs" value="" min="0" class="np" oninput="calc()"></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-subs" value="" min="0" class="np" oninput="calc()" onwheel="this.blur()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
-    <div class="out-card">
+    <div class="out-card has-tag">
       <div class="out-top"><span class="out-val" id="o-subs">—</span><div class="out-deltas"><span class="dpct" id="dp-subs"></span><span class="ddol" id="dd-subs"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+% growth</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-subs" value="" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">+% growth</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-subs" value="" step="1" min="0" oninput="calc()" onwheel="this.blur()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Subscription prompts + post-purchase offers + bundle incentives</div>
     </div>
+    <div class="pillar-tag retention">Retention</div>
   </div>
 
   <!-- ROW: Referral -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Referral Revenue</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ref" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ref" value="" min="0" oninput="calc()" onwheel="this.blur()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
-    <div class="out-card">
+    <div class="out-card has-tag">
       <div class="out-top"><span class="out-val" id="o-ref">—</span><div class="out-deltas"><span class="ddol" id="dd-ref"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">% of orders</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-ref" value="" step="1" min="0" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">% of orders</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-ref" value="" step="1" min="0" oninput="calc()" onwheel="this.blur()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Referral program (Okendo) + post-purchase flows</div>
     </div>
+    <div class="pillar-tag retention">Retention</div>
   </div>
 
   <!-- ROW: Churn -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Churn Rate</div>
-    <div class="iw"><input type="number" autocomplete="off" id="i-churn" value="" step="0.1" min="0" class="np" oninput="calc()"><span class="sfx">%</span></div>
+    <div class="iw"><input type="number" autocomplete="off" id="i-churn" value="" step="0.1" min="0" class="np" oninput="calc()" onwheel="this.blur()"><span class="sfx">%</span></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
-    <div class="out-card">
+    <div class="out-card has-tag">
       <div class="out-top"><span class="out-val" id="o-churn">—</span><div class="out-deltas"><span class="dpct" id="dp-churn"></span><span class="ddol" id="dd-churn"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">% reduction</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-churn" value="" step="1" min="0" max="99" oninput="calc()"><span class="imp-sfx">%</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">% reduction</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-churn" value="" step="1" min="0" max="99" oninput="calc()" onwheel="this.blur()"><span class="imp-sfx">%</span></div></div>
       <div class="attr">Save flows + loyalty program + subscription lock-in</div>
     </div>
+    <div class="pillar-tag retention">Retention</div>
   </div>
 
   <!-- ROW: LTV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Customer LTV</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ltv" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ltv" value="" min="0" oninput="calc()" onwheel="this.blur()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
@@ -301,14 +327,25 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: Ad Spend -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Monthly Ad Spend</div>
-    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ads" value="" min="0" oninput="calc()"></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ads" value="" min="0" oninput="calc()" onwheel="this.blur()"></div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-ads">—</span><div class="out-deltas"><span class="dpct" id="dp-ads"></span><span class="ddol" id="dd-ads"></span></div></div>
-      <div class="imp-row"><span class="imp-lbl">+$ increase</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-ads" value="" step="100" min="0" oninput="calc()"><span class="imp-sfx">$</span></div></div>
+      <div class="imp-row"><span class="imp-lbl">+$ increase</span><div class="imp-wrap"><input type="number" autocomplete="off" class="imp" id="p-ads" value="" step="100" min="0" oninput="calc()" onwheel="this.blur()"><span class="imp-sfx">$</span></div></div>
       <div class="attr">Your call — increase only when ROAS justifies it</div>
+    </div>
+  </div>
+
+  <!-- ROW: Vitalevo Fee -->
+  <div class="mc" style="visibility:hidden"><div class="mlabel">&nbsp;</div></div>
+  <div class="mc-mid"></div>
+  <div class="mc-r">
+    <div class="fee-row">
+      <span class="fee-label">Vitalevo fee</span>
+      <div class="iw fee-iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-fee" value="3500" min="0" step="100" class="fee-input" oninput="calc()" onwheel="this.blur()"></div>
+      <span class="fee-per">/mo</span>
     </div>
   </div>
 
@@ -340,7 +377,7 @@ input.imp:focus{border-color:var(--purple)}
   <div class="tbox" style="background:#f0fdf4;border:0.5px solid rgba(22,163,74,0.2);margin:0 8px">
     <div class="tlabel" style="color:#16A34A">After Vitalevo fee</div>
     <div class="tval" id="d-net" style="color:#16A34A">—</div>
-    <div class="tsub" style="color:#16A34A;opacity:0.7">net monthly gain after $1,800</div>
+    <div class="tsub" id="d-net-sub" style="color:#16A34A;opacity:0.7">net monthly gain after fee</div>
   </div>
 </div>
 
@@ -357,7 +394,7 @@ input.imp:focus{border-color:var(--purple)}
   <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:0">
     <div style="padding-right:1.5rem;text-align:center">
       <div style="font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">Excluding ad spend</div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:0.75rem;font-style:italic">Fee + tools + UGC = $2,548/mo</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:0.75rem;font-style:italic" id="bd-fee-line">Fee + tools + UGC</div>
       <div style="font-size:26px;font-weight:900;letter-spacing:-0.02em" id="bd-net-excl">—</div>
       <div style="font-size:13px;color:var(--muted);margin-top:4px">net monthly gain</div>
     </div>
@@ -376,7 +413,7 @@ input.imp:focus{border-color:var(--purple)}
   <div class="sc">
     <div class="sl">ROI on Vitalevo fee</div>
     <div class="sv" id="s-roi">—</div>
-    <div class="ss">at $1,800/mo</div>
+    <div class="ss" id="s-roi-sub">at $3.5K/mo</div>
   </div>
   <div class="sc">
     <div class="sl">Extra revenue / month</div>
@@ -415,6 +452,7 @@ function row(valId,val,pctId,pctStr,dolId,dolStr){
 }
 
 function calc(){
+  const fee  =+document.getElementById('i-fee').value||0;
   const rev  =+document.getElementById('i-rev').value||0;
   const roas =+document.getElementById('i-roas').value||0;
   const cvr  =+document.getElementById('i-cvr').value||0;
@@ -465,7 +503,7 @@ function calc(){
 
   const totalGain = roasGain + cvrGain + aovGain + subsGain + churnGain + refGain;
   const totalNew  = rev + totalGain;
-  const roi       = totalGain > 0 ? totalGain / 1800 : 0;
+  const roi       = totalGain > 0 && fee > 0 ? totalGain / fee : 0;
 
   const roasDelta = newRoas - roas;
   row('o-roas', fX2(newRoas), 'dp-roas', roasDelta>0?'+'+roasDelta.toFixed(1)+'x':'', 'dd-roas', roasGain>0?'+'+f$(roasGain):'');
@@ -503,13 +541,19 @@ function calc(){
   const ltvRoasSubEl = document.getElementById('s-ltvroas-sub');
   if(ltvRoasSubEl) ltvRoasSubEl.textContent = currentLtvRoas > 0 ? 'vs '+fX1(currentLtvRoas)+' current' : 'projected lifetime return';
 
-  const netGain = totalGain - 1800;
+  const netGain = totalGain - fee;
   const lossEl = document.getElementById('d-loss');
   const netEl  = document.getElementById('d-net');
   if(lossEl) lossEl.textContent = totalGain > 0 ? '-'+f$(totalGain) : '—';
   if(netEl)  netEl.textContent  = totalGain > 0 ? (netGain > 0 ? '+'+f$(netGain) : f$(netGain)) : '—';
+  const netSubEl = document.getElementById('d-net-sub');
+  if(netSubEl) netSubEl.textContent = 'net monthly gain after '+f$(fee);
+  const roiSubEl = document.getElementById('s-roi-sub');
+  if(roiSubEl) roiSubEl.textContent = 'at '+f$(fee)+'/mo';
 
-  const fixedTools = 1800 + 99 + 99 + 100 + 450;
+  const fixedTools = fee + 99 + 99 + 100 + 450;
+  const bdFeeLineEl = document.getElementById('bd-fee-line');
+  if(bdFeeLineEl) bdFeeLineEl.textContent = 'Fee + tools + UGC = '+f$(fixedTools)+'/mo';
   const adSpendVal = ads > 0 ? ads : 0;
   const netExcl = totalGain - fixedTools;
   const netAllin = totalGain - fixedTools - adSpendVal;
