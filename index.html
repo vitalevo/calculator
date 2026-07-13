@@ -49,6 +49,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(180deg,#fff 0%,
 .mc-mid{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-bottom:10px;padding-top:19px}
 .arr-field{height:44px;display:flex;align-items:center;justify-content:center}
 .mlabel{font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0.02em;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.ltv-hint{font-size:12px;color:var(--muted);opacity:0.75;margin-top:4px;font-style:italic}
 .mdot{width:4px;height:4px;border-radius:50%;background:var(--purple);opacity:0.35;flex-shrink:0}
 .arr{font-size:15px;color:var(--muted);opacity:0.2}
 
@@ -301,13 +302,14 @@ input.imp:focus{border-color:var(--purple)}
   <!-- ROW: LTV -->
   <div class="mc">
     <div class="mlabel"><div class="mdot"></div>Customer LTV</div>
-    <div class="derived-val" id="i-ltv">—<span class="calc-badge">derived</span></div>
+    <div class="iw"><span class="pfx">$</span><input type="number" autocomplete="off" id="i-ltv" value="" min="0" oninput="calc()" onwheel="this.blur()"></div>
+    <div class="ltv-hint" id="ltv-hint">Use the client's real number if they have one</div>
   </div>
   <div class="mc-mid"><div class="arr-field"><span class="arr">→</span></div></div>
   <div class="mc-r">
     <div class="out-card">
       <div class="out-top"><span class="out-val" id="o-ltv">—</span><div class="out-deltas"><span class="dpct" id="dp-ltv"></span></div></div>
-      <div class="attr">LTV = AOV ÷ churn rate — lower churn and higher order value both extend it &nbsp;·&nbsp; <span id="ltv-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
+      <div class="attr">Scales with AOV and churn improvement &nbsp;·&nbsp; <span id="ltv-formula" style="font-style:normal;font-weight:500;color:var(--purple)">—</span></div>
     </div>
   </div>
 
@@ -459,6 +461,7 @@ function calc(){
   const aov  =+document.getElementById('i-aov').value||0;
   const subs =+document.getElementById('i-subs').value||0;
   const churn=+document.getElementById('i-churn').value||0;
+  const ltv  =+document.getElementById('i-ltv').value||0;
   const ref  =+document.getElementById('i-ref').value||0;
   const ads  =+document.getElementById('i-ads').value||0;
 
@@ -482,8 +485,10 @@ function calc(){
   const newAov   = aov * (1 + pAov / 100);
   const newSubs  = subs * (1 + pSubs / 100);
   const newChurn = churn * (1 - pChurn / 100);
-  const currentLtv         = churn > 0 && aov > 0 ? aov / (churn / 100) : 0;
-  const projectedLtv       = newChurn > 0 && newAov > 0 ? newAov / (newChurn / 100) : 0;
+  const estimatedLtv       = churn > 0 && aov > 0 ? aov / (churn / 100) : 0;
+  const currentLtv         = ltv > 0 ? ltv : estimatedLtv;
+  const lifetimeScale      = (aov > 0 ? newAov / aov : 1) * (newChurn > 0 && churn > 0 ? churn / newChurn : 1);
+  const projectedLtv       = currentLtv * lifetimeScale;
   const currentLtvRoas     = (currentLtv > 0 && aov > 0 && roas > 0) ? (currentLtv * roas) / aov : 0;
   const projectedLtvRoas   = (projectedLtv > 0 && newAov > 0 && newRoas > 0) ? (projectedLtv * newRoas) / newAov : 0;
 
@@ -510,12 +515,15 @@ function calc(){
   row('o-subs', fN(newSubs)+' subs', 'dp-subs', pSubs?'+'+pSubs+'%':'', 'dd-subs', subsGain>0?'+'+f$(subsGain):'');
   row('o-churn', fP(newChurn), 'dp-churn', pChurn?'-'+pChurn+'%':'', 'dd-churn', churnGain>0?'+'+f$(churnGain):'');
 
-  const ltvEl = document.getElementById('i-ltv');
-  if(ltvEl) ltvEl.innerHTML = (currentLtv > 0 ? f$(currentLtv) : '—')+'<span class="calc-badge">derived</span>';
+  const ltvHintEl = document.getElementById('ltv-hint');
+  if(ltvHintEl) ltvHintEl.textContent = estimatedLtv > 0
+    ? (ltv > 0 ? 'AOV ÷ churn estimate: '+f$(estimatedLtv) : 'No LTV entered — using AOV ÷ churn estimate: '+f$(estimatedLtv))
+    : "Use the client's real number if they have one";
   const ltvPctDelta = currentLtv > 0 ? Math.round(((projectedLtv - currentLtv) / currentLtv) * 100) : 0;
   row('o-ltv', projectedLtv > 0 ? f$(projectedLtv) : '—', 'dp-ltv', ltvPctDelta > 0 ? '+'+ltvPctDelta+'%' : '', null, '');
   const ltvFormulaEl = document.getElementById('ltv-formula');
-  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(newAov)+' ÷ '+fP(newChurn)+' = '+(projectedLtv > 0 ? f$(projectedLtv) : '—');
+  if(ltvFormulaEl) ltvFormulaEl.textContent = f$(currentLtv)+' × ('+f$(newAov)+'÷'+f$(aov)+' AOV, '+fP(churn)+'÷'+fP(newChurn)+' churn) = '+(projectedLtv > 0 ? f$(projectedLtv) : '—');
+
 
   const ltvRoasEl = document.getElementById('i-ltvroas');
   if(ltvRoasEl) ltvRoasEl.innerHTML = (currentLtvRoas > 0 ? fX1(currentLtvRoas) : '—')+'<span class="calc-badge">derived</span>';
